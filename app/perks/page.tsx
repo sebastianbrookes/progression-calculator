@@ -238,7 +238,6 @@ export default function PerksPage() {
     // Separate perks by type for organized display
     const newPerks = perks.filter(p => newPerkIds.has(p.id))
     const savedPerkIds = new Set(perks.filter(p => !newPerkIds.has(p.id)).map(p => p.id))
-    const spinWheel = perks.filter(p => p.id === "spin_wheel" && savedPerkIds.has(p.id))
     const buffs = perks.filter(p => p.type === "buff" && p.id !== "spin_wheel" && savedPerkIds.has(p.id))
     const nerfs = perks.filter(p => p.type === "nerf" && savedPerkIds.has(p.id))
     const neutrals = perks.filter(p => p.type === "neutral" && p.id !== "spin_wheel" && savedPerkIds.has(p.id))
