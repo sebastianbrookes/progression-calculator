@@ -163,7 +163,7 @@ export const PERKS: Perk[] = [
         desc: "Only applies if player is in sophomore season",
         duration: "Rest of season",
         type: "nerf",
-        icon: "😴"
+        icon: "📉"
     },
     {
         id: "cold_streak",
