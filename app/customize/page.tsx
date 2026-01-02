@@ -292,7 +292,7 @@ export default function CustomizePage() {
                                 Revert to Default
                             </Button>
                             <Button variant="outline" asChild className="ml-auto">
-                                <Link href="/game-stats" className="flex items-center gap-2">
+                                <Link href="/" className="flex items-center gap-2">
                                     <ArrowLeft className="size-4" />
                                     Back to Game Stats
                                 </Link>
