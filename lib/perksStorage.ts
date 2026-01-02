@@ -56,6 +56,12 @@ export function hasCustomPerks(): boolean {
     }
 }
 
+// Helper to get a perk by ID, checking custom perks first
+export function getPerkByIdFromStorage(id: string): Perk | undefined {
+    const perks = getCustomPerks()
+    return perks.find(p => p.id === id)
+}
+
 // Helper to get a random perk using custom perks if available
 export function getRandomPerkFromStorage(): Perk {
     const perks = getCustomPerks()
