@@ -106,8 +106,12 @@ function SettingsSection({ title, icon, fields, settings, onChange, columns = 2 
                             id={field.key}
                             type="number"
                             min={0}
-                            value={settings[field.key]}
-                            onChange={(e) => onChange(field.key, parseInt(e.target.value) || 0)}
+                            value={settings[field.key] === 0 ? '' : settings[field.key]}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                onChange(field.key, val === '' ? 0 : parseInt(val) || 0);
+                            }}
+                            placeholder="0"
                             className="h-9"
                         />
                     </div>
