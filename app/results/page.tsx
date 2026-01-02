@@ -166,7 +166,7 @@ function ResultsContent() {
     }
 
     return (
-        <div className="h-screen bg-background p-4 md:p-6 overflow-hidden">
+        <div className="min-h-screen md:h-screen bg-background p-4 md:p-6 overflow-y-auto md:overflow-hidden">
             <div className="h-full max-w-6xl mx-auto flex flex-col">
                 {/* Compact Header */}
                 <div className="flex items-center justify-between mb-4 shrink-0">
@@ -196,30 +196,30 @@ function ResultsContent() {
                     </div>
                 </div>
 
-                {/* Bento Grid */}
-                <div className="flex-1 grid grid-cols-12 grid-rows-6 gap-3 min-h-0">
+                {/* Bento Grid - Mobile uses flex column, Desktop uses fixed grid */}
+                <div className="flex-1 flex flex-col gap-3 md:grid md:grid-cols-12 md:grid-rows-6 md:min-h-0">
                     {/* Game Stats - Top Left (spans 4 cols, 2 rows) */}
-                    <Card className="col-span-12 md:col-span-4 row-span-2 flex flex-col">
+                    <Card className="col-span-12 md:col-span-4 md:row-span-2 flex flex-col">
                         <CardContent className="flex-1 p-4 flex flex-col">
                             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">Game Stats</p>
                             <div className="flex-1 grid grid-cols-5 gap-2">
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center justify-center py-2 md:py-0">
                                     <div className="text-2xl font-bold">{stats.points}</div>
                                     <div className="text-[10px] text-muted-foreground uppercase">PTS</div>
                                 </div>
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center justify-center py-2 md:py-0">
                                     <div className="text-2xl font-bold">{stats.rebounds}</div>
                                     <div className="text-[10px] text-muted-foreground uppercase">REB</div>
                                 </div>
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center justify-center py-2 md:py-0">
                                     <div className="text-2xl font-bold">{stats.assists}</div>
                                     <div className="text-[10px] text-muted-foreground uppercase">AST</div>
                                 </div>
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center justify-center py-2 md:py-0">
                                     <div className="text-2xl font-bold">{stats.steals}</div>
                                     <div className="text-[10px] text-muted-foreground uppercase">STL</div>
                                 </div>
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center justify-center py-2 md:py-0">
                                     <div className="text-2xl font-bold">{stats.blocks}</div>
                                     <div className="text-[10px] text-muted-foreground uppercase">BLK</div>
                                 </div>
@@ -227,36 +227,39 @@ function ResultsContent() {
                         </CardContent>
                     </Card>
 
-                    {/* Attribute Points - Top Middle (spans 4 cols, 2 rows) */}
-                    <Card className="col-span-6 md:col-span-4 row-span-2 bg-gradient-to-br from-orange-500/10 to-amber-500/10 border-orange-500/30">
-                        <CardContent className="h-full p-4 flex flex-col items-center justify-center">
-                            <TrendingUp className="size-6 text-orange-500 mb-2" />
-                            <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">
-                                {totals.attr}
-                            </div>
-                            <div className="text-xs text-muted-foreground font-medium">Attribute Points</div>
-                        </CardContent>
-                    </Card>
+                    {/* Points Summary Row - Mobile shows side by side */}
+                    <div className="grid grid-cols-2 gap-3 md:contents">
+                        {/* Attribute Points - Top Middle (spans 4 cols, 2 rows) */}
+                        <Card className="md:col-span-4 md:row-span-2 bg-gradient-to-br from-orange-500/10 to-amber-500/10 border-orange-500/30">
+                            <CardContent className="h-full p-4 flex flex-col items-center justify-center min-h-[120px] md:min-h-0">
+                                <TrendingUp className="size-5 md:size-6 text-orange-500 mb-2" />
+                                <div className="text-3xl md:text-4xl font-bold text-orange-600 dark:text-orange-400">
+                                    {totals.attr}
+                                </div>
+                                <div className="text-[10px] md:text-xs text-muted-foreground font-medium text-center">Attribute Points</div>
+                            </CardContent>
+                        </Card>
 
-                    {/* Badge Points - Top Right (spans 4 cols, 2 rows) */}
-                    <Card className="col-span-6 md:col-span-4 row-span-2 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30">
-                        <CardContent className="h-full p-4 flex flex-col items-center justify-center">
-                            <Award className="size-6 text-amber-500 mb-2" />
-                            <div className="text-4xl font-bold text-amber-600 dark:text-amber-400">
-                                {totals.badge}
-                            </div>
-                            <div className="text-xs text-muted-foreground font-medium">Badge Points</div>
-                        </CardContent>
-                    </Card>
+                        {/* Badge Points - Top Right (spans 4 cols, 2 rows) */}
+                        <Card className="md:col-span-4 md:row-span-2 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30">
+                            <CardContent className="h-full p-4 flex flex-col items-center justify-center min-h-[120px] md:min-h-0">
+                                <Award className="size-5 md:size-6 text-amber-500 mb-2" />
+                                <div className="text-3xl md:text-4xl font-bold text-amber-600 dark:text-amber-400">
+                                    {totals.badge}
+                                </div>
+                                <div className="text-[10px] md:text-xs text-muted-foreground font-medium text-center">Badge Points</div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                    {/* Breakdown - Left (spans 6 cols, 4 rows) */}
-                    <Card className="col-span-12 md:col-span-6 row-span-3 flex flex-col">
+                    {/* Breakdown - Left (spans 6 cols, 3 rows on desktop) */}
+                    <Card className="col-span-12 md:col-span-6 md:row-span-3 flex flex-col">
                         <CardContent className="flex-1 p-4 flex flex-col min-h-0">
                             <div className="flex items-center gap-2 mb-3 shrink-0">
                                 <Target className="size-4 text-muted-foreground" />
                                 <h3 className="text-sm font-semibold">Points Breakdown</h3>
                             </div>
-                            <div className="flex-1 overflow-y-auto min-h-0 pr-1">
+                            <div className="flex-1 md:overflow-y-auto min-h-0 pr-1">
                                 {breakdown.length === 0 ? (
                                     <p className="text-sm text-muted-foreground text-center py-4">
                                         No points earned from this game.
@@ -277,16 +280,16 @@ function ResultsContent() {
                         </CardContent>
                     </Card>
 
-                    {/* Perk Card - Right (spans 6 cols, 3 rows) */}
-                    <Card className={`col-span-12 md:col-span-6 row-span-3 flex flex-col ${perk ? `bg-gradient-to-br ${getPerkColor(perk.type)} border-2` : ''}`}>
-                        <CardContent className="flex-1 p-4 flex flex-col items-center justify-center">
+                    {/* Perk Card - Right (spans 6 cols, 3 rows on desktop) */}
+                    <Card className={`col-span-12 md:col-span-6 md:row-span-3 flex flex-col ${perk ? `bg-gradient-to-br ${getPerkColor(perk.type)} border-2` : ''}`}>
+                        <CardContent className="flex-1 p-4 flex flex-col items-center justify-center min-h-[180px] md:min-h-0">
                             {perk ? (
                                 <>
-                                    <div className="text-5xl mb-3">{perk.icon}</div>
-                                    <h3 className={`text-lg font-bold mb-1 ${getPerkTextColor(perk.type)}`}>
+                                    <div className="text-4xl md:text-5xl mb-3">{perk.icon}</div>
+                                    <h3 className={`text-base md:text-lg font-bold mb-1 ${getPerkTextColor(perk.type)}`}>
                                         {perk.name}
                                     </h3>
-                                    <p className="text-sm text-center text-foreground mb-2">
+                                    <p className="text-sm text-center text-foreground mb-2 px-2">
                                         {perk.effect}
                                     </p>
                                     {perk.duration > 0 && (
@@ -298,7 +301,7 @@ function ResultsContent() {
                                 </>
                             ) : (
                                 <div className="text-center">
-                                    <Zap className="size-10 text-muted-foreground/50 mx-auto mb-3" />
+                                    <Zap className="size-8 md:size-10 text-muted-foreground/50 mx-auto mb-3" />
                                     <p className="text-sm text-muted-foreground">No perk applied</p>
                                     <p className="text-xs text-muted-foreground/70 mt-1">Spin the wheel next time!</p>
                                 </div>
@@ -307,10 +310,10 @@ function ResultsContent() {
                     </Card>
 
                     {/* Actions - Bottom (spans full width, 1 row) */}
-                    <div className="col-span-12 row-span-1 flex items-center justify-center gap-3">
+                    <div className="col-span-12 md:row-span-1 flex flex-col sm:flex-row items-center justify-center gap-3 py-4 md:py-0">
                         <Button
                             size="lg"
-                            className="bg-orange-600 hover:bg-orange-700 text-white"
+                            className="bg-orange-600 hover:bg-orange-700 text-white w-full sm:w-auto"
                             onClick={() => router.push("/")}
                         >
                             <RotateCcw className="size-4 mr-2" />
@@ -320,6 +323,7 @@ function ResultsContent() {
                             variant="outline"
                             size="lg"
                             asChild
+                            className="w-full sm:w-auto"
                         >
                             <Link href="/">
                                 <Home className="size-4 mr-2" />
