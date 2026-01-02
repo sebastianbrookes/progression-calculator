@@ -16,7 +16,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getPointSettings, PointSettings, DEFAULT_SETTINGS } from "@/lib/pointSettingsStorage"
-import { getPerkById, Perk } from "@/lib/perks"
+import { Perk } from "@/lib/perks"
+import { getPerkByIdFromStorage } from "@/lib/perksStorage"
 
 interface BreakdownItem {
     description: string
@@ -46,7 +47,7 @@ function ResultsContent() {
         // Load perk from URL
         const perkId = searchParams.get("perk")
         if (perkId) {
-            const foundPerk = getPerkById(perkId)
+            const foundPerk = getPerkByIdFromStorage(perkId)
             if (foundPerk) setPerk(foundPerk)
         }
 
