@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ArrowLeft, RotateCcw, Save, Target, Trophy, Medal, Shield, Crown, Star, Award } from "lucide-react"
+import { ArrowLeft, RotateCcw, Save, Target, Trophy, Medal, Shield, Crown, Star, Check } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -124,6 +124,7 @@ function SettingsSection({ title, icon, fields, settings, onChange, columns = 2 
 export default function CustomizePage() {
     const [settings, setSettings] = React.useState<PointSettings>(DEFAULT_SETTINGS)
     const [isSaved, setIsSaved] = React.useState(false)
+    const [isReverted, setIsReverted] = React.useState(false)
     const [isLoaded, setIsLoaded] = React.useState(false)
 
     React.useEffect(() => {
@@ -134,18 +135,22 @@ export default function CustomizePage() {
     const handleChange = (key: keyof PointSettings, value: number) => {
         setSettings(prev => ({ ...prev, [key]: value }))
         setIsSaved(false)
+        setIsReverted(false)
     }
 
     const handleSave = () => {
         savePointSettings(settings)
         setIsSaved(true)
-        setTimeout(() => setIsSaved(false), 2000)
+        // Auto-dismiss the popup after 3 seconds
+        setTimeout(() => setIsSaved(false), 3000)
     }
 
     const handleRevert = () => {
         resetPointSettings()
         setSettings(DEFAULT_SETTINGS)
         setIsSaved(false)
+        setIsReverted(true)
+        setTimeout(() => setIsReverted(false), 3000)
     }
 
     if (!isLoaded) {
@@ -283,13 +288,13 @@ export default function CustomizePage() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap items-center gap-3">
-                            <Button onClick={handleSave} className="gap-2">
+                            <Button onClick={handleSave} className="gap-2" disabled={isSaved}>
                                 <Save className="size-4" />
                                 {isSaved ? "Saved!" : "Save Settings"}
                             </Button>
                             <Button variant="destructive" onClick={handleRevert} className="gap-2">
                                 <RotateCcw className="size-4" />
-                                Revert to Default
+                                {isReverted ? "Reverted!" : "Revert to Default"}
                             </Button>
                             <Button variant="outline" asChild className="ml-auto">
                                 <Link href="/" className="flex items-center gap-2">
@@ -298,8 +303,30 @@ export default function CustomizePage() {
                                 </Link>
                             </Button>
                         </div>
+
+                        {/* Revert Notification */}
+                        {isReverted && (
+                            <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                                <RotateCcw className="size-4" />
+                                <span>All fields have been reset to their default values.</span>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
+
+                {/* Success Popup */}
+                {isSaved && (
+                    <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-500 text-white shadow-lg">
+                            <div className="flex items-center justify-center size-6 rounded-full bg-white/20">
+                                <Check className="size-4" />
+                            </div>
+                            <div className="text-sm font-medium">
+                                Settings saved successfully!
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
