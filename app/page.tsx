@@ -215,7 +215,7 @@ export default function GameStatsPage() {
                 </Card>
 
                 <div className="text-center text-xs text-muted-foreground pt-6 mt-3 space-y-1">
-                    <p>Made for Peeweedaplug's Brooklyn Nets series.</p>
+                    <p>Made for <a href="https://www.youtube.com/@PeeWeeDaGamer" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Peeweedaplug</a>'s Brooklyn Nets series.</p>
                     <p>
                         Shoutout to Jonas Dockx, the creator of{" "}
                         <a
@@ -226,7 +226,7 @@ export default function GameStatsPage() {
                         >
                             nba2kpt.com
                         </a>
-                        . This calculator wouldn't have been possible without his work.
+                        . This site wouldn't have been possible without his work.
                     </p>
                     <p>
                         Message me on{" "}
