@@ -10,7 +10,8 @@ import {
     Medal,
     Shield,
     Crown,
-    Settings
+    Settings,
+    Sparkles
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -207,6 +208,12 @@ export default function GameStatsPage() {
                                     <Link href="/customize" className="flex items-center gap-1.5">
                                         <Settings className="size-3.5" />
                                         Customize Point Settings
+                                    </Link>
+                                </Button>
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href="/perks" className="flex items-center gap-1.5">
+                                        <Sparkles className="size-3.5" />
+                                        Add/Edit Perks
                                     </Link>
                                 </Button>
                             </div>

@@ -292,10 +292,10 @@ function ResultsContent() {
                                     <p className="text-sm text-center text-foreground mb-2 px-2">
                                         {perk.effect}
                                     </p>
-                                    {perk.duration > 0 && (
+                                    {perk.duration !== "0 games" && perk.duration !== "N/A" && (
                                         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                             <Clock className="size-3" />
-                                            <span>{perk.duration} {perk.duration === 1 ? 'game' : 'games'}</span>
+                                            <span>{perk.duration}</span>
                                         </div>
                                     )}
                                 </>
