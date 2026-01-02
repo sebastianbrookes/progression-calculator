@@ -60,12 +60,12 @@ export function hasCustomPerks(): boolean {
 export function getRandomPerkFromStorage(): Perk {
     const perks = getCustomPerks()
 
-    // 75% chance of no perk (using 0.3 threshold for "no effect")
+    // 30% chance of no perk (using 0.3 threshold for "no effect")
     if (Math.random() < 0.3) {
         return perks.find(p => p.id === "no_effect") || perks[perks.length - 1]
     }
 
-    // 25% chance of getting an actual perk (excluding spin_wheel and no_effect)
+    // 70% chance of getting an actual perk (excluding spin_wheel and no_effect)
     const actualPerks = perks.filter(p => p.id !== "spin_wheel" && p.id !== "no_effect")
     if (actualPerks.length === 0) {
         return perks.find(p => p.id === "no_effect") || perks[0]
