@@ -334,7 +334,7 @@ export default function PerksPage() {
                             </button>
                             {!collapsedSections.buffs && (
                                 <div className="grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                                    {buffs.map((perk, globalIndex) => {
+                                    {buffs.map((perk) => {
                                         const actualIndex = perks.findIndex(p => p.id === perk.id)
                                         return (
                                             <PerkCard
