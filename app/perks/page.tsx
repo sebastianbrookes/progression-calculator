@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Perk, PERKS } from "@/lib/perks"
 import { getCustomPerks, saveCustomPerks, resetCustomPerks } from "@/lib/perksStorage"
 
-type PerkType = "buff" | "nerf" | "neutral"
+type PerkType = "" | "buff" | "nerf" | "neutral"
 
 const perkTypeOptions: { value: PerkType; label: string; color: string }[] = [
     { value: "buff", label: "Buff", color: "text-green-500" },
