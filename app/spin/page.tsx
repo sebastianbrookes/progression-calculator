@@ -2,16 +2,19 @@
 
 import * as React from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Dices, SkipForward, ArrowRight, Sparkles, RotateCcw } from "lucide-react"
+import { Dices, SkipForward, ArrowRight, Sparkles, RotateCcw, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { PERKS, Perk, getRandomPerk } from "@/lib/perks"
+import { Perk, PERKS } from "@/lib/perks"
+import { getCustomPerks, getRandomPerkFromStorage } from "@/lib/perksStorage"
 
 function SpinContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const [isSpinning, setIsSpinning] = React.useState(false)
     const [hasSpun, setHasSpun] = React.useState(false)
+    const [perks, setPerks] = React.useState<Perk[]>(PERKS)
     const [currentPerk, setCurrentPerk] = React.useState<Perk>(PERKS[0])
     const [finalPerk, setFinalPerk] = React.useState<Perk | null>(null)
     const intervalRef = React.useRef<NodeJS.Timeout | null>(null)
@@ -37,11 +40,11 @@ function SpinContent() {
 
         let count = 0
         const maxCount = 30 + Math.floor(Math.random() * 20)
-        const selected = getRandomPerk()
+        const selected = getRandomPerkFromStorage()
 
         intervalRef.current = setInterval(() => {
-            const randomIndex = Math.floor(Math.random() * PERKS.length)
-            setCurrentPerk(PERKS[randomIndex])
+            const randomIndex = Math.floor(Math.random() * perks.length)
+            setCurrentPerk(perks[randomIndex])
             count++
 
             if (count >= maxCount) {
@@ -62,11 +65,11 @@ function SpinContent() {
         // Cycle through perks rapidly
         let count = 0
         const maxCount = 30 + Math.floor(Math.random() * 20) // 30-50 cycles
-        const selected = getRandomPerk()
+        const selected = getRandomPerkFromStorage()
 
         intervalRef.current = setInterval(() => {
-            const randomIndex = Math.floor(Math.random() * PERKS.length)
-            setCurrentPerk(PERKS[randomIndex])
+            const randomIndex = Math.floor(Math.random() * perks.length)
+            setCurrentPerk(perks[randomIndex])
             count++
 
             if (count >= maxCount) {
@@ -78,6 +81,13 @@ function SpinContent() {
             }
         }, 80) // Speed of cycling
     }
+
+    React.useEffect(() => {
+        // Load custom perks from localStorage on mount
+        const customPerks = getCustomPerks()
+        setPerks(customPerks)
+        setCurrentPerk(customPerks[0])
+    }, [])
 
     React.useEffect(() => {
         return () => {
@@ -127,18 +137,23 @@ function SpinContent() {
 
                 {/* Perk Display Card */}
                 <Card className={`mb-8 bg-gradient-to-br ${getPerkColor(currentPerk.type)} border-2 transition-all duration-100 ${isSpinning ? 'scale-105' : ''} h-72 w-full`}>
-                    <CardContent className="py-10 px-6 h-full flex flex-col items-center justify-center">
-                        <div className={`text-6xl mb-4 ${isSpinning ? 'animate-pulse' : ''}`}>
+                    <CardContent className="py-10 px-6 h-full flex flex-col items-center justify-center overflow-hidden">
+                        <div className={`text-6xl mb-4 shrink-0 ${isSpinning ? 'animate-pulse' : ''}`}>
                             {currentPerk.icon}
                         </div>
-                        <h2 className={`text-2xl font-bold mb-2 ${getPerkTextColor(currentPerk.type)} truncate max-w-full`}>
+                        <h2 className={`text-2xl font-bold mb-2 ${getPerkTextColor(currentPerk.type)} truncate max-w-full shrink-0`}>
                             {currentPerk.name}
                         </h2>
-                        <p className="text-lg font-medium text-foreground mb-2 line-clamp-2 text-center">
+                        <p className="text-lg font-medium text-foreground mb-2 line-clamp-2 text-center shrink-0">
                             {currentPerk.effect}
                         </p>
-                        <p className="text-sm text-muted-foreground">
-                            {currentPerk.duration} {currentPerk.duration === 1 ? 'game' : 'games'}
+                        {currentPerk.desc && (
+                            <p className="text-sm text-muted-foreground/80 italic mb-2 line-clamp-2 text-center shrink-0">
+                                {currentPerk.desc}
+                            </p>
+                        )}
+                        <p className="text-sm text-muted-foreground shrink-0">
+                            {currentPerk.duration}
                         </p>
                     </CardContent>
                 </Card>
@@ -174,6 +189,17 @@ function SpinContent() {
                             >
                                 <SkipForward className="size-4 mr-2" />
                                 Skip to Results
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="lg"
+                                className="w-full"
+                                asChild
+                            >
+                                <Link href="/">
+                                    <ArrowLeft className="size-4 mr-2" />
+                                    Back to Game Stats
+                                </Link>
                             </Button>
                         </>
                     ) : (
