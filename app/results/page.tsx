@@ -241,47 +241,22 @@ function ResultsContent() {
                             </CardContent>
                         </Card>
 
-                        {/* Badge Points - Top Right (spans 4 cols, 2 rows) */}
+                        {/* Upgrade Cost Legend - Top Right (spans 4 cols, 2 rows) */}
                         <Card className="md:col-span-4 md:row-span-2 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30">
-                            <CardContent className="h-full p-4 flex flex-col items-center justify-center min-h-[120px] md:min-h-0">
-                                <Award className="size-5 md:size-6 text-amber-500 mb-2" />
-                                <div className="text-3xl md:text-4xl font-bold text-amber-600 dark:text-amber-400">
-                                    {totals.badge}
+                            <CardContent className="h-full p-3 flex flex-col justify-center min-h-[120px] md:min-h-0">
+                                <p className="text-[10px] md:text-xs font-semibold text-muted-foreground mb-2 text-center">Upgrade Cost Legend</p>
+                                <div className="space-y-0.5 text-xs md:text-sm font-semibold">
+                                    <div className="text-foreground">Below 70: <span className="font-bold">1 devpoint</span></div>
+                                    <div className="text-yellow-500">70-79: <span className="font-bold">2 devpoints</span></div>
+                                    <div className="text-gray-400">80-89: <span className="font-bold">3 devpoints</span></div>
+                                    <div className="text-purple-500">90-94: <span className="font-bold">5 devpoints</span></div>
+                                    <div className="text-orange-500">Above 94: <span className="font-bold">5 devpoints</span></div>
                                 </div>
-                                <div className="text-[10px] md:text-xs text-muted-foreground font-medium text-center">Badge Points</div>
                             </CardContent>
                         </Card>
                     </div>
 
-                    {/* Breakdown - Left (spans 6 cols, 3 rows on desktop) */}
-                    <Card className="col-span-12 md:col-span-6 md:row-span-3 flex flex-col">
-                        <CardContent className="flex-1 p-4 flex flex-col min-h-0">
-                            <div className="flex items-center gap-2 mb-3 shrink-0">
-                                <Target className="size-4 text-muted-foreground" />
-                                <h3 className="text-sm font-semibold">Points Breakdown</h3>
-                            </div>
-                            <div className="flex-1 md:overflow-y-auto min-h-0 pr-1">
-                                {breakdown.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground text-center py-4">
-                                        No points earned from this game.
-                                    </p>
-                                ) : (
-                                    <div className="space-y-2">
-                                        {breakdown.map((item, index) => (
-                                            <div key={index} className="flex items-center justify-between py-1.5 border-b last:border-0 border-border/50">
-                                                <span className="text-sm">{item.description}</span>
-                                                <span className={`text-sm font-bold ${item.type === 'attr' ? 'text-orange-600 dark:text-orange-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                                                    +{item.points}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Perk Card - Right (spans 6 cols, 3 rows on desktop) */}
+                    {/* Perk Card - Left (spans 6 cols, 3 rows on desktop) */}
                     <Card className={`col-span-12 md:col-span-6 md:row-span-3 flex flex-col ${perk ? `bg-gradient-to-br ${getPerkColor(perk.type)} border-2` : ''}`}>
                         <CardContent className="flex-1 p-4 flex flex-col items-center justify-center min-h-[180px] md:min-h-0">
                             {perk ? (
@@ -307,6 +282,34 @@ function ResultsContent() {
                                     <p className="text-xs text-muted-foreground/70 mt-1">Spin the wheel next time!</p>
                                 </div>
                             )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Breakdown - Right (spans 6 cols, 3 rows on desktop) */}
+                    <Card className="col-span-12 md:col-span-6 md:row-span-3 flex flex-col">
+                        <CardContent className="flex-1 p-4 flex flex-col min-h-0">
+                            <div className="flex items-center gap-2 mb-3 shrink-0">
+                                <Target className="size-4 text-muted-foreground" />
+                                <h3 className="text-sm font-semibold">Points Breakdown</h3>
+                            </div>
+                            <div className="flex-1 md:overflow-y-auto min-h-0 pr-1">
+                                {breakdown.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground text-center py-4">
+                                        No points earned from this game.
+                                    </p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {breakdown.map((item, index) => (
+                                            <div key={index} className="flex items-center justify-between py-1.5 border-b last:border-0 border-border/50">
+                                                <span className="text-sm">{item.description}</span>
+                                                <span className={`text-sm font-bold ${item.type === 'attr' ? 'text-orange-600 dark:text-orange-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                                                    +{item.points}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
 
