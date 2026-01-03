@@ -146,6 +146,60 @@ export const PERKS: Perk[] = [
         type: "buff",
         icon: "🌟"
     },
+    {
+        id: "ankle_breaker",
+        name: "Ankle Breaker",
+        effect: "+4 Ball Handle & +2 Speed with Ball",
+        desc: "Crossovers leave defenders stumbling",
+        duration: "10 games",
+        type: "buff",
+        icon: "🦶"
+    },
+    {
+        id: "wilts_ghost",
+        name: "Wilt's Ghost",
+        effect: "+6 Rebounding & +3 Vertical",
+        desc: "Channeling the Big Dipper's energy",
+        duration: "6 games",
+        type: "buff",
+        icon: "👻"
+    },
+    {
+        id: "showtime",
+        name: "Showtime",
+        effect: "+4 Flashy Pass & +3 Driving Layup",
+        desc: "Hollywood-level entertainment",
+        duration: "10 games",
+        type: "buff",
+        icon: "🎬"
+    },
+    {
+        id: "post_malone",
+        name: "Post Malone",
+        effect: "+5 Post Control & +3 Post Fade",
+        desc: "Dominating the paint old school",
+        duration: "8 games",
+        type: "buff",
+        icon: "📬"
+    },
+    {
+        id: "gym_rat",
+        name: "Gym Rat",
+        effect: "+2 All Physicals",
+        desc: "Extra offseason work pays off",
+        duration: "Rest of season",
+        type: "buff",
+        icon: "🏋️"
+    },
+    {
+        id: "hot_hand",
+        name: "Hot Hand",
+        effect: "+3 to all offensive attributes",
+        desc: "Can't miss from anywhere",
+        duration: "12 games",
+        type: "buff",
+        icon: "🤚"
+    },
     // Nerfs
     {
         id: "load_management",
@@ -183,7 +237,7 @@ export const PERKS: Perk[] = [
         type: "nerf",
         icon: "😔"
     },
-        {
+    {
         id: "sprite",
         name: "Sprite on the Sideline",
         effect: "-10 Stamina",
@@ -200,6 +254,60 @@ export const PERKS: Perk[] = [
         duration: "6 games",
         type: "nerf",
         icon: "🦵"
+    },
+    {
+        id: "contract_year_blues",
+        name: "Contract Year Blues",
+        effect: "-3 Shot IQ",
+        desc: "Pressing too hard for that bag",
+        duration: "8 games",
+        type: "nerf",
+        icon: "📝"
+    },
+    {
+        id: "tunnel_vision",
+        name: "Tunnel Vision",
+        effect: "-4 Pass Vision & Accuracy",
+        desc: "Forgot teammates exist",
+        duration: "6 games",
+        type: "nerf",
+        icon: "🚇"
+    },
+    {
+        id: "butter_fingers",
+        name: "Butter Fingers",
+        effect: "-3 Ball Handle & -2 Pass Accuracy",
+        desc: "Can't hold onto anything",
+        duration: "5 games",
+        type: "nerf",
+        icon: "🧈"
+    },
+    {
+        id: "glass_ankles",
+        name: "Glass Ankles",
+        effect: "-4 Speed & Acceleration",
+        desc: "Nagging injury slowing you down",
+        duration: "4 games",
+        type: "nerf",
+        icon: "🩹"
+    },
+    {
+        id: "playoff_choker",
+        name: "Playoff Choker",
+        effect: "-5 All Attributes",
+        desc: "Big moments, small performances",
+        duration: "Playoffs only",
+        type: "nerf",
+        icon: "😰"
+    },
+    {
+        id: "party_animal",
+        name: "Party Animal",
+        effect: "-2 All Attributes & -3 Stamina",
+        desc: "Someone was out too late",
+        duration: "7 games",
+        type: "nerf",
+        icon: "🎉"
     },
     // Neutral
     {
