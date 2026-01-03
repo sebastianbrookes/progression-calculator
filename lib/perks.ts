@@ -230,7 +230,7 @@ export const PERKS: Perk[] = [
     },
     {
         id: "off_night",
-        name: "Off Night",
+        name: "Scared of the Rim",
         effect: "-3 Finishing",
         desc: "",
         duration: "5 games",
@@ -241,7 +241,7 @@ export const PERKS: Perk[] = [
         id: "sprite",
         name: "Sprite on the Sideline",
         effect: "-10 Stamina",
-        desc: "Player took DMills' advice.",
+        desc: "Player took DMills' advice :((",
         duration: "5 games",
         type: "nerf",
         icon: "🥤"
@@ -284,7 +284,7 @@ export const PERKS: Perk[] = [
     },
     {
         id: "glass_ankles",
-        name: "Glass Ankles",
+        name: "Ankle Tweak",
         effect: "-4 Speed & Acceleration",
         desc: "Nagging injury slowing you down",
         duration: "4 games",
@@ -294,7 +294,7 @@ export const PERKS: Perk[] = [
     {
         id: "playoff_choker",
         name: "Playoff Choker",
-        effect: "-5 All Attributes",
+        effect: "-3 All Attributes",
         desc: "Big moments, small performances",
         duration: "Playoffs only",
         type: "nerf",
@@ -303,9 +303,9 @@ export const PERKS: Perk[] = [
     {
         id: "party_animal",
         name: "Party Animal",
-        effect: "-2 All Attributes & -3 Stamina",
+        effect: "-2 Speed & -3 Stamina",
         desc: "Someone was out too late",
-        duration: "7 games",
+        duration: "5 games",
         type: "nerf",
         icon: "🎉"
     },
