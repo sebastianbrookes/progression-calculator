@@ -183,6 +183,15 @@ export const PERKS: Perk[] = [
         type: "nerf",
         icon: "😔"
     },
+        {
+        id: "sprite",
+        name: "Sprite on the Sideline",
+        effect: "-10 Stamina",
+        desc: "Player took DMills' advice.",
+        duration: "5 games",
+        type: "nerf",
+        icon: "🥤"
+    },
     {
         id: "heavy_legs",
         name: "Heavy Legs",
