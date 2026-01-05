@@ -90,13 +90,13 @@ npm run build
 npm start
 ```
 
-## � Community Adoption
+## Community Adoption
 
 Real usage data from Vercel Analytics showing community engagement:
 
 ![Analytics](/public/analytics.jpeg)
 
-## �🙏 Credits
+## 🙏 Credits
 
 - Built for [Peeweedaplug's](https://www.youtube.com/@PeeWeeDaGamer) Brooklyn Nets MyNBA series
 - Inspired by [nba2kpt.com](https://www.nba2kpt.com/) by Jonas Dockx
