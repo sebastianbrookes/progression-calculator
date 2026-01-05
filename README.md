@@ -1,6 +1,10 @@
 # 🏀 NBA 2K Progression Calculator
 
+**[🔗 Live Demo](https://progression-calculator-khaki.vercel.app/)**
+
 A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your player's game stats and receive calculated development points with randomized perks that add excitement and realism to player progression.
+
+![Homepage Preview](/public/preview.jpeg)
 
 ## ✨ Features
 
@@ -86,8 +90,15 @@ npm run build
 npm start
 ```
 
-## 🙏 Credits
+## � Community Adoption
+
+Real usage data from Vercel Analytics showing community engagement:
+
+![Analytics](/public/analytics.jpeg)
+
+## �🙏 Credits
 
 - Built for [Peeweedaplug's](https://www.youtube.com/@PeeWeeDaGamer) Brooklyn Nets MyNBA series
 - Inspired by [nba2kpt.com](https://www.nba2kpt.com/) by Jonas Dockx
 - Developed by [Sebastian Brookes](https://www.linkedin.com/in/sebastian-brookes/)
+
