@@ -91,7 +91,3 @@ npm start
 - Built for [Peeweedaplug's](https://www.youtube.com/@PeeWeeDaGamer) Brooklyn Nets MyNBA series
 - Inspired by [nba2kpt.com](https://www.nba2kpt.com/) by Jonas Dockx
 - Developed by [Sebastian Brookes](https://www.linkedin.com/in/sebastian-brookes/)
-
-## 📄 License
-
-MIT
