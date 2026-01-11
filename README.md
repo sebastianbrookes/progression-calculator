@@ -1,12 +1,12 @@
-# 🏀 NBA 2K Progression Calculator
+# NBA 2K Progression Calculator
 
-**[🔗 Live Demo](https://progression-calculator-khaki.vercel.app/)**
+[**🔗 Live Demo**](https://progression-calculator-khaki.vercel.app/)
 
 A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your player's game stats and receive calculated development points with randomized perks that add excitement and realism to player progression.
 
 ![Homepage Preview](/public/preview.jpeg)
 
-## ✨ Features
+## Features
 
 - **📊 Stats Entry** — Input points, rebounds, assists, steals, blocks, and awards
 - **🎲 Perk Wheel** — Spin for random buffs, nerfs, or neutral effects
@@ -15,10 +15,10 @@ A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your pl
 - **💾 Persistent Settings** — localStorage saves your preferences
 - **📱 Mobile Friendly** — Responsive design for on-the-go use
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Version | Purpose |
-|------------|---------|---------|
+| --- | --- | --- |
 | [Next.js](https://nextjs.org/) | 16.1 | React framework |
 | [React](https://react.dev/) | 19.2 | UI library |
 | [TypeScript](https://www.typescriptlang.org/) | 5.x | Type safety |
@@ -27,7 +27,7 @@ A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your pl
 | [Lucide React](https://lucide.dev/) | — | Icons |
 | [Vercel](https://vercel.com/) | — | Deployment |
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -38,7 +38,7 @@ A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your pl
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/progression-calculator.git
+git clone <https://github.com/sebastianbrookes/progression-calculator.git>
 
 # Navigate to project
 cd progression-calculator
@@ -48,11 +48,12 @@ npm install
 
 # Start development server
 npm run dev
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the app.
+Open [http://localhost:3000](http://localhost:3000/) to view the app.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 progression-calculator/
@@ -69,18 +70,19 @@ progression-calculator/
 │   ├── perksStorage.ts   # Custom perk localStorage
 │   └── pointSettingsStorage.ts  # Point config storage
 └── public/               # Static assets
+
 ```
 
-## 🎮 How It Works
+## How It Works
 
 1. **Enter Stats** — Input your player's game performance
 2. **Select Awards** — Check any earned accolades (POTG, MVP, etc.)
 3. **Spin the Wheel** — Try your luck for a buff or debuff perk
 4. **View Results** — See calculated development & badge points with perk effects
 
-## 🌐 Deployment
+## Deployment
 
-Deployed on [Vercel](https://vercel.com). Push to `main` for automatic deployment.
+Deployed on [Vercel](https://vercel.com/). Push to `main` for automatic deployment.
 
 ```bash
 # Build for production
@@ -88,17 +90,15 @@ npm run build
 
 # Start production server
 npm start
+
 ```
 
 ## Community Adoption
 
 Real usage data from Vercel Analytics showing community engagement:
 
-![Analytics](/public/analytics.jpeg)
+![Analytics](/public/analytics.png)
 
-## 🙏 Credits
+## Credits
 
-- Built for [Peeweedaplug's](https://www.youtube.com/@PeeWeeDaGamer) Brooklyn Nets MyNBA series
-- Inspired by [nba2kpt.com](https://www.nba2kpt.com/) by Jonas Dockx
-- Developed by [Sebastian Brookes](https://www.linkedin.com/in/sebastian-brookes/)
-
+Inspired by [nba2kpt.com](https://www.nba2kpt.com/) by Jonas Dockx
