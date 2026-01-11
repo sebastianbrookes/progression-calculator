@@ -4,7 +4,7 @@
 
 A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your player's game stats and receive calculated development points with randomized perks that add excitement and realism to player progression.
 
-![Homepage Preview](/public/preview.jpeg)
+![Homepage Preview](/public/preview.webp)
 
 ## Features
 
@@ -97,7 +97,7 @@ npm start
 
 Real usage data from Vercel Analytics showing community engagement:
 
-![Analytics](/public/analytics.png)
+![Analytics](/public/analytics.webp)
 
 ## Credits
 
