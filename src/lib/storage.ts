@@ -41,11 +41,13 @@ export function createStore<T>({ key, fallback, parse, serialize = (v) => v }: S
         fallback,
         get() {
             if (typeof window === "undefined") return fallback
-            let raw: string | null = null
+            let raw: string | null
             try {
                 raw = localStorage.getItem(key)
             } catch {
                 // Storage can be unavailable (e.g. some private browsing modes).
+                // Keep the last value set, so changes still last for the visit.
+                return cached
             }
             if (raw !== cachedRaw) {
                 cachedRaw = raw

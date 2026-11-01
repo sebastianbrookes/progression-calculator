@@ -11,7 +11,7 @@ export function PerksToggle({ className }: { className?: string }) {
     const hydrated = useHydrated()
 
     return (
-        <label className={cn("flex cursor-pointer items-center gap-4 rounded-2xl px-4 py-3 ring-1 ring-white/[0.08] ring-inset", className)}>
+        <label data-tour="perks" className={cn("flex cursor-pointer items-center gap-4 rounded-2xl px-4 py-3 ring-1 ring-white/[0.08] ring-inset", className)}>
             <span>
                 <span className="block text-sm text-foreground">Perks</span>
                 <span className="block text-xs text-muted-foreground">

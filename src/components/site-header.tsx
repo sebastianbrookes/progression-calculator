@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 const NAV = [
-    { href: "/", label: "Game", match: ["/", "/spin", "/results"] },
-    { href: "/customize", label: "Point rules", match: ["/customize"] },
-    { href: "/perks", label: "Perks", match: ["/perks"] },
+    { href: "/", label: "Game", match: ["/", "/spin", "/results"], tour: "nav-game" },
+    { href: "/customize", label: "Point rules", match: ["/customize"], tour: "nav-rules" },
+    { href: "/perks", label: "Perks", match: ["/perks"], tour: "nav-perks" },
 ]
 
 export function SiteHeader() {
@@ -19,12 +19,13 @@ export function SiteHeader() {
                 Progression<span className="hidden sm:inline"> Calculator</span>
             </Link>
             <nav className="-mr-2.5 flex items-center text-sm">
-                {NAV.map(({ href, label, match }) => {
+                {NAV.map(({ href, label, match, tour }) => {
                     const active = match.includes(pathname)
                     return (
                         <Link
                             key={href}
                             href={href}
+                            data-tour={tour}
                             aria-current={active ? "page" : undefined}
                             className={cn(
                                 "rounded-lg px-2.5 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground",

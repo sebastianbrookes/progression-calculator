@@ -50,7 +50,7 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
         >
             <fieldset>
                 <legend className="mb-3 text-sm text-muted-foreground">Box score</legend>
-                <div className="panel grid grid-cols-5 overflow-hidden">
+                <div data-tour="box-score" className="panel grid grid-cols-5 overflow-hidden">
                     {STATS.map(({ key, label, abbr }, i) => (
                         <label
                             key={key}

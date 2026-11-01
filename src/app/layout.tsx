@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { Inter } from "next/font/google"
 import { SiteHeader } from "@/components/site-header"
+import { Tour } from "@/components/tour"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <body className="min-h-dvh">
                 <SiteHeader />
                 <main className="mx-auto w-full max-w-4xl px-5 pt-12 pb-20 sm:px-6 sm:pt-16">{children}</main>
+                <Tour />
                 <Analytics />
             </body>
         </html>

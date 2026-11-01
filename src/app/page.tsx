@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import { GameForm, GameFormFromUrl } from "@/components/game/game-form"
 import { PerksToggle } from "@/components/game/perks-toggle"
+import { TourButton } from "@/components/tour"
 
 export default function HomePage() {
     return (
@@ -27,6 +28,10 @@ export default function HomePage() {
                 </p>
                 <p>
                     Feedback or ideas? Message me on <ExternalLink href="https://x.com/sbrookesss">X</ExternalLink>.
+                </p>
+                <p>
+                    New here?{" "}
+                    <TourButton className="cursor-pointer text-secondary-foreground underline decoration-white/20 underline-offset-[3px] transition-colors hover:text-foreground hover:decoration-white/60" />
                 </p>
             </footer>
         </>

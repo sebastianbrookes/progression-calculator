@@ -85,6 +85,14 @@ function toPerk(value: unknown): Perk | null {
     }
 }
 
+// Whether the player has finished or skipped the first-visit tour. A new key,
+// so players from the previous version see the tour once too.
+export const tourStore = createStore<boolean>({
+    key: "progression_tour_seen",
+    fallback: false,
+    parse: (raw) => raw === true,
+})
+
 export interface Preferences {
     // Off skips the perk spin entirely: games go straight to results.
     perksEnabled: boolean
