@@ -27,7 +27,7 @@ const STEPS = [
     {
         target: "nav-perks",
         title: "Perks",
-        body: "Add, edit, or remove the perks you can spin, and set how long each one lasts. Everything saves in this browser.",
+        body: "Add, edit, or remove the perks you can spin, and set how long each one lasts. Everything saves automatically.",
     },
 ]
 
