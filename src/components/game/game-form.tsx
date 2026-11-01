@@ -55,11 +55,17 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                         <label
                             key={key}
                             className={cn(
-                                "group flex cursor-text flex-col items-center gap-1 pt-4 pb-3 transition-colors focus-within:bg-white/[0.03]",
+                                "group relative flex cursor-text flex-col items-center gap-1 pt-4 pb-3 transition-colors focus-within:bg-white/[0.03]",
                                 i > 0 && "border-l",
                             )}
                         >
-                            <span className="text-xs tracking-wide text-muted-foreground transition-colors group-focus-within:text-primary" aria-hidden>
+                            <span
+                                className={cn(
+                                    "text-xs tracking-wide transition-colors group-focus-within:text-primary",
+                                    draft[key] ? "text-secondary-foreground" : "text-muted-foreground",
+                                )}
+                                aria-hidden
+                            >
                                 {abbr}
                             </span>
                             <span className="sr-only">{label}</span>
@@ -76,6 +82,10 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                                 onFocus={(e) => e.target.select()}
                                 placeholder="0"
                                 className="w-full bg-transparent text-center text-4xl font-extralight tabular-nums outline-none placeholder:text-white/15 sm:text-5xl"
+                            />
+                            <span
+                                aria-hidden
+                                className="absolute inset-x-5 bottom-0 h-0.5 origin-center scale-x-0 rounded-full bg-primary transition-transform duration-200 ease-out group-focus-within:scale-x-100"
                             />
                         </label>
                     ))}
@@ -99,12 +109,19 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                 />
             </div>
 
-            <div className="flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-end sm:justify-between">
-                <div className="flex items-end gap-8" aria-live="polite">
+            <div className="panel relative flex flex-col gap-6 overflow-hidden p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
+                <span
+                    aria-hidden
+                    className={cn(
+                        "pointer-events-none absolute -top-24 -left-16 size-72 rounded-full bg-primary/10 blur-3xl transition-opacity duration-500",
+                        result.attr > 0 ? "opacity-100" : "opacity-0",
+                    )}
+                />
+                <div className="relative flex items-end gap-10" aria-live="polite">
                     <Tally value={result.attr} label="Attribute points" accent />
                     <Tally value={result.badge} label="Badge points" />
                 </div>
-                <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                <div className="relative flex flex-col-reverse gap-2 sm:flex-row">
                     {perksEnabled ? (
                         <>
                             <ButtonLink href={`/results?${query}`} variant="ghost">
@@ -130,7 +147,14 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
 function Tally({ value, label, accent = false }: { value: number; label: string; accent?: boolean }) {
     return (
         <p>
-            <span className={cn("block text-4xl font-extralight tabular-nums", value === 0 ? "text-muted-foreground/50" : accent && "text-primary")}>
+            {/* Keyed so each change replays a small pop. */}
+            <span
+                key={value}
+                className={cn(
+                    "block text-5xl font-extralight tabular-nums animate-in fade-in-50 zoom-in-90 duration-200 motion-reduce:animate-none",
+                    value === 0 ? "text-muted-foreground/50" : accent ? "text-primary" : "text-foreground",
+                )}
+            >
                 +{value}
             </span>
             <span className="mt-1 block text-xs text-muted-foreground">{label}</span>
@@ -162,18 +186,27 @@ function AwardGroup({ legend, awards, selected, onToggle, settings }: AwardGroup
                             className={cn(
                                 "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm ring-1 transition-[color,background-color,box-shadow] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                                 on
-                                    ? "bg-primary/10 text-foreground ring-primary/50"
+                                    ? "bg-primary/10 text-foreground ring-primary/50 shadow-[0_0_24px_-10px_var(--primary)]"
                                     : "bg-surface text-secondary-foreground ring-white/[0.08] hover:bg-white/[0.06] hover:text-foreground",
                             )}
                         >
-                            {award.kind === "season" ? (
-                                <span title={award.label}>{award.short}</span>
-                            ) : (
-                                <span className="truncate" title={award.label}>
-                                    <span className="sm:hidden">{award.short}</span>
-                                    <span className="hidden sm:inline">{award.label}</span>
-                                </span>
-                            )}
+                            <span className="flex min-w-0 items-center gap-2.5">
+                                <span
+                                    aria-hidden
+                                    className={cn(
+                                        "size-1.5 shrink-0 rounded-full transition-[background-color,box-shadow] duration-150",
+                                        on ? "bg-primary shadow-[0_0_8px_var(--primary)]" : "bg-white/15",
+                                    )}
+                                />
+                                {award.kind === "season" ? (
+                                    <span title={award.label}>{award.short}</span>
+                                ) : (
+                                    <span className="truncate" title={award.label}>
+                                        <span className="sm:hidden">{award.short}</span>
+                                        <span className="hidden sm:inline">{award.label}</span>
+                                    </span>
+                                )}
+                            </span>
                             <span className="flex shrink-0 gap-1.5 text-xs text-muted-foreground tabular-nums">
                                 <span className={on ? "text-primary" : undefined}>+{settings[award.attr]}</span>
                                 {award.badge && <span className={on ? "text-foreground" : undefined}>+{settings[award.badge]}</span>}

@@ -27,9 +27,6 @@ export default function HomePage() {
                     <ExternalLink href="https://www.nba2kpt.com/">nba2kpt.com</ExternalLink>.
                 </p>
                 <p>
-                    Feedback or ideas? Message me on <ExternalLink href="https://x.com/sbrookesss">X</ExternalLink>.
-                </p>
-                <p>
                     New here?{" "}
                     <TourButton className="cursor-pointer text-secondary-foreground underline decoration-white/20 underline-offset-[3px] transition-colors hover:text-foreground hover:decoration-white/60" />
                 </p>
