@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Dialog } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { PERK_TYPE_LABEL, PerkTypeDot } from "@/components/perk-style"
+import { PERK_TYPE_LABEL, PerkDuration, PerkTypeDot } from "@/components/perk-style"
 import { NO_EFFECT_CHANCE, NO_EFFECT_ID, hasDuration, type Perk, type PerkType } from "@/lib/perks"
 import { perksStore } from "@/lib/stores"
 import { useHydrated, useStore } from "@/lib/storage"
@@ -102,9 +102,7 @@ export function PerkEditor() {
                                                     <span className="block truncate text-sm text-foreground">{perk.name}</span>
                                                     <span className="block truncate text-xs text-muted-foreground">{perk.effect}</span>
                                                 </span>
-                                                {hasDuration(perk) && (
-                                                    <span className="hidden shrink-0 text-xs text-muted-foreground sm:block">{perk.duration}</span>
-                                                )}
+                                                {hasDuration(perk) && <PerkDuration duration={perk.duration} />}
                                             </button>
                                         </li>
                                     ))}

@@ -3,7 +3,8 @@
 import * as React from "react"
 import type { Perk } from "@/lib/perks"
 import { cn } from "@/lib/utils"
-import { PerkTypeDot } from "@/components/perk-style"
+import { PerkDuration, PerkTypeDot } from "@/components/perk-style"
+import { hasDuration } from "@/lib/perks"
 
 const SPIN_MS = 4200
 const FILLER_COUNT = 32
@@ -85,13 +86,14 @@ function ReelRow({ slot }: { slot: ReelSlot }) {
     return (
         <div className="flex h-24 items-center gap-4 px-4">
             <span className="grid size-11 shrink-0 place-items-center text-4xl leading-none">{slot.icon || "✨"}</span>
-            <span className="min-w-0">
+            <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
                     <PerkTypeDot type={slot.type} />
                     <span className="truncate text-lg text-foreground">{slot.name || "Untitled perk"}</span>
                 </span>
                 <span className="block truncate text-sm text-muted-foreground">{slot.effect}</span>
             </span>
+            {hasDuration(slot) && <PerkDuration duration={slot.duration} />}
         </div>
     )
 }

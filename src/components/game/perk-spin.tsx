@@ -2,14 +2,14 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ArrowRight, Clock, Dices, Pencil, RotateCcw } from "lucide-react"
+import { ArrowRight, Dices, Pencil, RotateCcw } from "lucide-react"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { drawPerk, hasDuration, type Perk } from "@/lib/perks"
 import { gameFromParams, gameToParams, scoreGame } from "@/lib/scoring"
 import { perksStore, settingsStore } from "@/lib/stores"
 import { useStore } from "@/lib/storage"
 import { cn } from "@/lib/utils"
-import { PerkTypeLabel } from "@/components/perk-style"
+import { PerkDuration, PerkTypeLabel } from "@/components/perk-style"
 import { StatSummary } from "./stat-summary"
 import { PerkReel, buildStrip, type ReelSlot } from "./perk-reel"
 
@@ -61,22 +61,17 @@ export function PerkSpin() {
                 onLand={() => setPhase("landed")}
             />
 
-            <div className="min-h-20 pt-5 text-sm" aria-live="polite">
+            <div className="min-h-24 pt-5 pb-6 text-sm" aria-live="polite">
                 {phase === "landed" && perk ? (
                     <div className="animate-in fade-in duration-300">
                         <p className="sr-only">
                             {perk.name}: {perk.effect}
                         </p>
-                        <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <p className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                            {hasDuration(perk) && <PerkDuration duration={perk.duration} size="lg" />}
                             <PerkTypeLabel type={perk.type} />
-                            {hasDuration(perk) && (
-                                <span className="flex items-center gap-1.5 text-muted-foreground">
-                                    <Clock className="size-3.5" />
-                                    {perk.duration}
-                                </span>
-                            )}
                         </p>
-                        {perk.desc && <p className="mt-1.5 text-secondary-foreground">{perk.desc}</p>}
+                        {perk.desc && <p className="mt-2 text-secondary-foreground">{perk.desc}</p>}
                     </div>
                 ) : (
                     <p className="text-muted-foreground">

@@ -1,14 +1,16 @@
 import { Suspense } from "react"
 import { GameForm, GameFormFromUrl } from "@/components/game/game-form"
+import { PerksToggle } from "@/components/game/perks-toggle"
 
 export default function HomePage() {
     return (
         <>
-            <div className="mb-10">
-                <h1 className="text-xl text-foreground">Log a game</h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Enter your player&apos;s box score and any awards, then spin for a perk.
-                </p>
+            <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h1 className="text-xl text-foreground">Log a game</h1>
+                    <p className="mt-1 text-sm text-muted-foreground">Enter your player&apos;s box score and any awards.</p>
+                </div>
+                <PerksToggle className="sm:w-72" />
             </div>
 
             {/* The empty form is prerendered; the URL-filled one replaces it on load. */}

@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Dices } from "lucide-react"
+import { ArrowRight, Dices } from "lucide-react"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { AWARDS, STATS, type Award, type PointSettings, type StatKey } from "@/lib/rules"
 import { gameFromParams, gameToParams, scoreGame, toCount, type Game } from "@/lib/scoring"
-import { settingsStore } from "@/lib/stores"
+import { preferencesStore, settingsStore } from "@/lib/stores"
 import { useStore } from "@/lib/storage"
 import { cn } from "@/lib/utils"
 
@@ -24,6 +24,7 @@ export function GameFormFromUrl() {
 export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
     const router = useRouter()
     const settings = useStore(settingsStore)
+    const { perksEnabled } = useStore(preferencesStore)
     const [draft, setDraft] = React.useState<Draft>(
         () => Object.fromEntries(STATS.map(({ key }) => [key, initial.stats[key] ? String(initial.stats[key]) : ""])) as Draft,
     )
@@ -43,7 +44,7 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
         <form
             onSubmit={(e) => {
                 e.preventDefault()
-                router.push(`/spin?${query}`)
+                router.push(perksEnabled ? `/spin?${query}` : `/results?${query}`)
             }}
             className="space-y-10"
         >
@@ -81,20 +82,22 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                 </div>
             </fieldset>
 
-            <AwardGroup
-                legend="Game and monthly awards"
-                awards={AWARDS.filter((a) => a.kind === "recurring")}
-                selected={awards}
-                onToggle={toggleAward}
-                settings={settings}
-            />
-            <AwardGroup
-                legend="Season awards"
-                awards={AWARDS.filter((a) => a.kind === "season")}
-                selected={awards}
-                onToggle={toggleAward}
-                settings={settings}
-            />
+            <div className="grid gap-10 lg:grid-cols-2 lg:gap-6">
+                <AwardGroup
+                    legend="Game and monthly awards"
+                    awards={AWARDS.filter((a) => a.kind === "recurring")}
+                    selected={awards}
+                    onToggle={toggleAward}
+                    settings={settings}
+                />
+                <AwardGroup
+                    legend="Season awards"
+                    awards={AWARDS.filter((a) => a.kind === "season")}
+                    selected={awards}
+                    onToggle={toggleAward}
+                    settings={settings}
+                />
+            </div>
 
             <div className="flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-end sm:justify-between">
                 <div className="flex items-end gap-8" aria-live="polite">
@@ -102,13 +105,22 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                     <Tally value={result.badge} label="Badge points" />
                 </div>
                 <div className="flex flex-col-reverse gap-2 sm:flex-row">
-                    <ButtonLink href={`/results?${query}`} variant="ghost">
-                        Skip the spin
-                    </ButtonLink>
-                    <Button type="submit">
-                        <Dices />
-                        Spin for a perk
-                    </Button>
+                    {perksEnabled ? (
+                        <>
+                            <ButtonLink href={`/results?${query}`} variant="ghost">
+                                Skip the spin
+                            </ButtonLink>
+                            <Button type="submit">
+                                <Dices />
+                                Spin for a perk
+                            </Button>
+                        </>
+                    ) : (
+                        <Button type="submit">
+                            See results
+                            <ArrowRight />
+                        </Button>
+                    )}
                 </div>
             </div>
         </form>

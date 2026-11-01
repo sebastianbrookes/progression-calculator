@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <html lang="en" className={inter.variable}>
             <body className="min-h-dvh">
                 <SiteHeader />
-                <main className="mx-auto w-full max-w-2xl px-5 pt-12 pb-20 sm:px-6 sm:pt-16">{children}</main>
+                <main className="mx-auto w-full max-w-4xl px-5 pt-12 pb-20 sm:px-6 sm:pt-16">{children}</main>
                 <Analytics />
             </body>
         </html>

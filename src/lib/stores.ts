@@ -84,3 +84,21 @@ function toPerk(value: unknown): Perk | null {
         icon: str(v.icon),
     }
 }
+
+export interface Preferences {
+    // Off skips the perk spin entirely: games go straight to results.
+    perksEnabled: boolean
+}
+
+const DEFAULT_PREFERENCES: Preferences = { perksEnabled: true }
+
+export const preferencesStore = createStore<Preferences>({
+    key: "progression_preferences",
+    fallback: DEFAULT_PREFERENCES,
+    parse: (raw) => ({
+        perksEnabled:
+            raw && typeof raw === "object" && typeof (raw as Preferences).perksEnabled === "boolean"
+                ? (raw as Preferences).perksEnabled
+                : DEFAULT_PREFERENCES.perksEnabled,
+    }),
+})

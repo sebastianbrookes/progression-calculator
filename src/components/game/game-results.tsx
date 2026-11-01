@@ -2,13 +2,13 @@
 
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
-import { Check, Clock, Copy, Dices, Pencil, Plus } from "lucide-react"
+import { Check, Copy, Dices, Pencil, Plus } from "lucide-react"
 import { Button, ButtonLink } from "@/components/ui/button"
-import { PerkTypeLabel } from "@/components/perk-style"
+import { PerkDuration, PerkTypeLabel } from "@/components/perk-style"
 import { DEFAULT_PERKS, hasDuration, type Perk } from "@/lib/perks"
 import { STATS, UPGRADE_COSTS } from "@/lib/rules"
 import { gameFromParams, gameToParams, scoreGame, type Game, type GameResult } from "@/lib/scoring"
-import { perksStore, settingsStore } from "@/lib/stores"
+import { perksStore, preferencesStore, settingsStore } from "@/lib/stores"
 import { useStore } from "@/lib/storage"
 import { cn } from "@/lib/utils"
 import { StatSummary } from "./stat-summary"
@@ -26,6 +26,7 @@ export function GameResults() {
     const game = gameFromParams(params)
     const perks = useStore(perksStore)
     const settings = useStore(settingsStore)
+    const { perksEnabled } = useStore(preferencesStore)
     const result = scoreGame(game, settings)
 
     const perkId = params.get("perk")
@@ -86,7 +87,7 @@ export function GameResults() {
             </section>
 
             <div className="mt-12 grid gap-8 sm:grid-cols-2">
-                <PerkPanel perk={perk} spinHref={`/spin?${gameToParams(game)}`} />
+                {(perk || perksEnabled) && <PerkPanel perk={perk} spinHref={`/spin?${gameToParams(game)}`} />}
 
                 <section>
                     <h2 className="mb-3 text-sm text-muted-foreground">Cost of a +1 upgrade</h2>
@@ -139,21 +140,16 @@ function PerkPanel({ perk, spinHref }: { perk: Perk | null; spinHref: string }) 
     return (
         <section className="panel self-start p-5">
             <h2 className="sr-only">Perk</h2>
-            <div className="flex items-center gap-3">
+            <div className="flex items-start gap-3">
                 <span className="text-4xl leading-none">{perk.icon || "✨"}</span>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                     <p className="text-base text-foreground">{perk.name}</p>
                     <PerkTypeLabel type={perk.type} className="text-xs" />
                 </div>
+                {hasDuration(perk) && <PerkDuration duration={perk.duration} />}
             </div>
             <p className="mt-4 text-sm text-secondary-foreground">{perk.effect}</p>
             {perk.desc && <p className="mt-1 text-sm text-muted-foreground">{perk.desc}</p>}
-            {hasDuration(perk) && (
-                <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Clock className="size-3.5" />
-                    {perk.duration}
-                </p>
-            )}
         </section>
     )
 }
