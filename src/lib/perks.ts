@@ -1,24 +1,23 @@
+export type PerkType = "buff" | "nerf" | "neutral"
+
 export interface Perk {
     id: string
     name: string
     effect: string
     desc: string
     duration: string
-    type: "buff" | "nerf" | "neutral" | ""
+    type: PerkType
     icon: string
 }
 
-export const PERKS: Perk[] = [
-    {
-        id: "spin_wheel",
-        name: "Spin the Wheel",
-        effect: "",
-        desc: "",
-        duration: "",
-        type: "neutral",
-        icon: ""
-    },
+// The "nothing happens" outcome. It can be edited but not deleted, because
+// the draw falls back to it.
+export const NO_EFFECT_ID = "no_effect"
 
+// Chance that a spin lands on No Effect instead of a real perk.
+export const NO_EFFECT_CHANCE = 0.3
+
+export const DEFAULT_PERKS: Perk[] = [
     // Buffs
     {
         id: "mamba_mentality",
@@ -321,18 +320,15 @@ export const PERKS: Perk[] = [
     }
 ]
 
-export function getRandomPerk(): Perk {
-    // 75% chance of no perk
-    if (Math.random() < 0.3) {
-        return PERKS.find(p => p.id === "no_effect")!
-    }
-
-    // 25% chance of getting an actual perk (excluding spin_wheel and no_effect)
-    const actualPerks = PERKS.filter(p => p.id !== "spin_wheel" && p.id !== "no_effect")
-    const randomIndex = Math.floor(Math.random() * actualPerks.length)
-    return actualPerks[randomIndex]
+export function drawPerk(perks: Perk[], random: () => number = Math.random): Perk {
+    const noEffect = perks.find((p) => p.id === NO_EFFECT_ID) ?? DEFAULT_PERKS.find((p) => p.id === NO_EFFECT_ID)!
+    const pool = perks.filter((p) => p.id !== NO_EFFECT_ID)
+    if (pool.length === 0 || random() < NO_EFFECT_CHANCE) return noEffect
+    return pool[Math.floor(random() * pool.length)]
 }
 
-export function getPerkById(id: string): Perk | undefined {
-    return PERKS.find(p => p.id === id)
+// Durations like "0 games" or "N/A" mean the perk is permanent or instant.
+export function hasDuration(perk: Perk): boolean {
+    const d = perk.duration.trim().toLowerCase()
+    return d !== "" && d !== "0 games" && d !== "n/a"
 }

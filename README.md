@@ -8,22 +8,22 @@ A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your pl
 
 ## Features
 
-- **📊 Stats Entry** — Input points, rebounds, assists, steals, blocks, and awards
-- **🎲 Perk Wheel** — Spin for random buffs, nerfs, or neutral effects
-- **📈 Points Calculation** — Automatic development and badge point generation
-- **⚙️ Customization** — Configure point values and create custom perks
-- **💾 Persistent Settings** — localStorage saves your preferences
-- **📱 Mobile Friendly** — Responsive design for on-the-go use
+- **📊 Box score entry** — Points, rebounds, assists, steals, blocks, and awards, with a live point tally as you type
+- **🎰 Perk reel** — A slot-style spin for a random buff, nerf, or no effect
+- **📈 Points breakdown** — Attribute and badge points, line by line, plus a one-click text summary to copy
+- **⚙️ Point rules** — Change what every milestone and award is worth
+- **✨ Perk editor** — Edit, add, or remove perks, with the real odds shown
+- **💾 Saved on your device** — Rules and perks autosave to localStorage
+- **📱 Mobile friendly** — Works on a phone next to the TV
 
 ## Tech Stack
 
 | Technology | Version | Purpose |
 | --- | --- | --- |
-| [Next.js](https://nextjs.org/) | 16.1 | React framework |
-| [React](https://react.dev/) | 19.2 | UI library |
+| [Next.js](https://nextjs.org/) | 16.4 | React framework |
+| [React](https://react.dev/) | 19.3 | UI library |
 | [TypeScript](https://www.typescriptlang.org/) | 5.x | Type safety |
 | [Tailwind CSS](https://tailwindcss.com/) | 4.x | Styling |
-| [shadcn/ui](https://ui.shadcn.com/) | — | Component library |
 | [Lucide React](https://lucide.dev/) | — | Icons |
 | [Vercel](https://vercel.com/) | — | Deployment |
 
@@ -31,7 +31,7 @@ A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your pl
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - npm or yarn
 
 ### Installation
@@ -56,29 +56,43 @@ Open [http://localhost:3000](http://localhost:3000/) to view the app.
 ## Project Structure
 
 ```
-progression-calculator/
-├── app/
-│   ├── page.tsx          # Home - Stats entry form
-│   ├── spin/page.tsx     # Perk wheel spinner
-│   ├── results/page.tsx  # Points breakdown & perk display
-│   ├── customize/        # Point settings configuration
-│   └── perks/            # Custom perk management
+src/
+├── app/                      # Routes. Each page.tsx sets metadata and renders a component.
+│   ├── page.tsx              # Log a game
+│   ├── spin/                 # Spin for a perk
+│   ├── results/              # Game result
+│   ├── customize/            # Point rules
+│   └── perks/                # Perk editor
 ├── components/
-│   └── ui/               # shadcn/ui components
-├── lib/
-│   ├── perks.ts          # Perk definitions
-│   ├── perksStorage.ts   # Custom perk localStorage
-│   └── pointSettingsStorage.ts  # Point config storage
-└── public/               # Static assets
+│   ├── game/                 # Stats form, perk reel, results
+│   ├── settings/             # Point rules editor
+│   ├── perks/                # Perk editor
+│   └── ui/                   # Button, input, confirm dialog
+└── lib/
+    ├── rules.ts              # Every scoring rule and its default value
+    ├── scoring.ts            # scoreGame() and URL encoding of a game
+    ├── perks.ts              # Default perks and the draw
+    ├── storage.ts            # localStorage-backed stores for React
+    └── stores.ts             # Saved rules and perks, incl. migrating old saves
+```
 
+To add a scoring rule, add its default to `DEFAULT_SETTINGS` in `rules.ts` and reference it from `STAT_TIERS`, `MULTI_DOUBLES`, or `AWARDS`. The form, the settings page, and the calculator all pick it up from there.
+
+## Scripts
+
+```bash
+npm run dev        # Start the dev server
+npm test           # Run unit tests (scoring, URL params, saved-data migration)
+npm run lint       # ESLint
+npm run typecheck  # TypeScript
+npm run build      # Production build
 ```
 
 ## How It Works
 
-1. **Enter Stats** — Input your player's game performance
-2. **Select Awards** — Check any earned accolades (POTG, MVP, etc.)
-3. **Spin the Wheel** — Try your luck for a buff or debuff perk
-4. **View Results** — See calculated development & badge points with perk effects
+1. **Log a game** — Enter the box score and any awards (POTG, MVP, etc.)
+2. **Spin for a perk** — Or skip it
+3. **See the result** — Attribute and badge points with a breakdown, plus the perk you landed
 
 ## Deployment
 
