@@ -48,17 +48,17 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
             className="space-y-10"
         >
             <fieldset>
-                <legend className="mb-3 text-sm font-medium text-muted-foreground">Box score</legend>
-                <div className="grid grid-cols-5 overflow-hidden rounded-lg border bg-surface">
+                <legend className="mb-3 text-sm text-muted-foreground">Box score</legend>
+                <div className="panel grid grid-cols-5 overflow-hidden">
                     {STATS.map(({ key, label, abbr }, i) => (
                         <label
                             key={key}
                             className={cn(
-                                "group relative flex cursor-text flex-col items-center pt-3 pb-2 transition-colors focus-within:bg-surface-raised",
+                                "group flex cursor-text flex-col items-center gap-1 pt-4 pb-3 transition-colors focus-within:bg-white/[0.03]",
                                 i > 0 && "border-l",
                             )}
                         >
-                            <span className="text-xs font-semibold tracking-wider text-muted-foreground group-focus-within:text-primary" aria-hidden>
+                            <span className="text-xs tracking-wide text-muted-foreground transition-colors group-focus-within:text-primary" aria-hidden>
                                 {abbr}
                             </span>
                             <span className="sr-only">{label}</span>
@@ -74,42 +74,39 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                                 }}
                                 onFocus={(e) => e.target.select()}
                                 placeholder="0"
-                                className="w-full bg-transparent text-center font-display text-5xl leading-none font-bold outline-none placeholder:text-muted-foreground/30 sm:text-7xl"
+                                className="w-full bg-transparent text-center text-4xl font-extralight tabular-nums outline-none placeholder:text-white/15 sm:text-5xl"
                             />
-                            <span className="absolute inset-x-0 bottom-0 h-0.5 scale-x-0 bg-primary transition-transform group-focus-within:scale-x-100" />
                         </label>
                     ))}
                 </div>
             </fieldset>
 
-            <div className="grid gap-8 lg:grid-cols-2">
-                <AwardGroup
-                    legend="Game and monthly awards"
-                    awards={AWARDS.filter((a) => a.kind === "recurring")}
-                    selected={awards}
-                    onToggle={toggleAward}
-                    settings={settings}
-                />
-                <AwardGroup
-                    legend="Season awards"
-                    awards={AWARDS.filter((a) => a.kind === "season")}
-                    selected={awards}
-                    onToggle={toggleAward}
-                    settings={settings}
-                />
-            </div>
+            <AwardGroup
+                legend="Game and monthly awards"
+                awards={AWARDS.filter((a) => a.kind === "recurring")}
+                selected={awards}
+                onToggle={toggleAward}
+                settings={settings}
+            />
+            <AwardGroup
+                legend="Season awards"
+                awards={AWARDS.filter((a) => a.kind === "season")}
+                selected={awards}
+                onToggle={toggleAward}
+                settings={settings}
+            />
 
-            <div className="flex flex-col gap-5 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-baseline gap-6" aria-live="polite">
-                    <Tally value={result.attr} label="attribute points" className="text-primary" />
-                    <Tally value={result.badge} label="badge points" className="text-badge" />
+            <div className="flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex items-end gap-8" aria-live="polite">
+                    <Tally value={result.attr} label="Attribute points" accent />
+                    <Tally value={result.badge} label="Badge points" />
                 </div>
                 <div className="flex flex-col-reverse gap-2 sm:flex-row">
-                    <ButtonLink href={`/results?${query}`} variant="ghost" size="lg">
+                    <ButtonLink href={`/results?${query}`} variant="ghost">
                         Skip the spin
                     </ButtonLink>
-                    <Button type="submit" size="lg">
-                        <Dices className="size-5" />
+                    <Button type="submit">
+                        <Dices />
                         Spin for a perk
                     </Button>
                 </div>
@@ -118,13 +115,13 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
     )
 }
 
-function Tally({ value, label, className }: { value: number; label: string; className: string }) {
+function Tally({ value, label, accent = false }: { value: number; label: string; accent?: boolean }) {
     return (
-        <p className="flex items-baseline gap-2">
-            <span className={cn("font-display text-4xl font-bold tabular-nums", value === 0 && "text-muted-foreground/50", value > 0 && className)}>
+        <p>
+            <span className={cn("block text-4xl font-extralight tabular-nums", value === 0 ? "text-muted-foreground/50" : accent && "text-primary")}>
                 +{value}
             </span>
-            <span className="text-sm text-muted-foreground">{label}</span>
+            <span className="mt-1 block text-xs text-muted-foreground">{label}</span>
         </p>
     )
 }
@@ -140,7 +137,7 @@ interface AwardGroupProps {
 function AwardGroup({ legend, awards, selected, onToggle, settings }: AwardGroupProps) {
     return (
         <fieldset>
-            <legend className="mb-3 text-sm font-medium text-muted-foreground">{legend}</legend>
+            <legend className="mb-3 text-sm text-muted-foreground">{legend}</legend>
             <div className="grid grid-cols-2 gap-2">
                 {awards.map((award) => {
                     const on = selected.includes(award.id)
@@ -151,10 +148,10 @@ function AwardGroup({ legend, awards, selected, onToggle, settings }: AwardGroup
                             aria-pressed={on}
                             onClick={() => onToggle(award.id)}
                             className={cn(
-                                "flex items-center justify-between gap-2 rounded-md border px-3 py-2.5 text-left text-sm font-medium transition-colors",
+                                "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm ring-1 transition-[color,background-color,box-shadow] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                                 on
-                                    ? "border-primary bg-primary/10 text-foreground"
-                                    : "bg-surface text-muted-foreground hover:border-muted-foreground/40 hover:text-foreground",
+                                    ? "bg-primary/10 text-foreground ring-primary/50"
+                                    : "bg-surface text-secondary-foreground ring-white/[0.08] hover:bg-white/[0.06] hover:text-foreground",
                             )}
                         >
                             {award.kind === "season" ? (
@@ -165,9 +162,9 @@ function AwardGroup({ legend, awards, selected, onToggle, settings }: AwardGroup
                                     <span className="hidden sm:inline">{award.label}</span>
                                 </span>
                             )}
-                            <span className="flex shrink-0 gap-1.5 text-xs tabular-nums">
+                            <span className="flex shrink-0 gap-1.5 text-xs text-muted-foreground tabular-nums">
                                 <span className={on ? "text-primary" : undefined}>+{settings[award.attr]}</span>
-                                {award.badge && <span className={on ? "text-badge" : undefined}>+{settings[award.badge]}</span>}
+                                {award.badge && <span className={on ? "text-foreground" : undefined}>+{settings[award.badge]}</span>}
                             </span>
                         </button>
                     )

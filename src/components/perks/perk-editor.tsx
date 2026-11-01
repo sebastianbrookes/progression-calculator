@@ -1,224 +1,249 @@
 "use client"
 
 import * as React from "react"
-import { ChevronDown, Plus, RotateCcw, Trash2 } from "lucide-react"
+import { Plus, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { Dialog } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { PERK_TYPE_BG, PERK_TYPE_LABEL, PERK_TYPE_TEXT } from "@/components/perk-style"
+import { PERK_TYPE_LABEL, PerkTypeDot } from "@/components/perk-style"
 import { NO_EFFECT_CHANCE, NO_EFFECT_ID, hasDuration, type Perk, type PerkType } from "@/lib/perks"
 import { perksStore } from "@/lib/stores"
 import { useHydrated, useStore } from "@/lib/storage"
 import { cn } from "@/lib/utils"
 
 const TYPES: PerkType[] = ["buff", "nerf", "neutral"]
-type Filter = PerkType | "all"
-const FILTER_LABEL: Record<Filter, string> = { all: "All", buff: "Buffs", nerf: "Nerfs", neutral: "Neutral" }
+const GROUP_TITLE: Record<PerkType, string> = { buff: "Buffs", nerf: "Nerfs", neutral: "Neutral" }
+
+// What the dialog is open for: a brand-new perk, or an existing one.
+type Editing = { perk: Perk; isNew: boolean } | null
+
+const blankPerk = (): Perk => ({
+    id: `custom_${Date.now().toString(36)}`,
+    name: "",
+    effect: "",
+    desc: "",
+    duration: "",
+    type: "buff",
+    icon: "✨",
+})
 
 export function PerkEditor() {
     const perks = useStore(perksStore)
     const hydrated = useHydrated()
-    const [filter, setFilter] = React.useState<Filter>("all")
-    const [openId, setOpenId] = React.useState<string | null>(null)
+    const [editing, setEditing] = React.useState<Editing>(null)
 
-    const update = (id: string, patch: Partial<Perk>) =>
-        perksStore.set(perksStore.get().map((p) => (p.id === id ? { ...p, ...patch } : p)))
-    const remove = (id: string) => perksStore.set(perksStore.get().filter((p) => p.id !== id))
-    const add = () => {
-        const perk: Perk = {
-            id: `custom_${Date.now().toString(36)}`,
-            name: "",
-            effect: "",
-            desc: "",
-            duration: "",
-            type: filter === "all" ? "buff" : filter,
-            icon: "✨",
-        }
-        perksStore.set([perk, ...perksStore.get()])
-        setOpenId(perk.id)
+    const save = (perk: Perk) => {
+        const current = perksStore.get()
+        perksStore.set(editing?.isNew ? [...current, perk] : current.map((p) => (p.id === perk.id ? perk : p)))
+        setEditing(null)
+    }
+    const remove = (id: string) => {
+        perksStore.set(perksStore.get().filter((p) => p.id !== id))
+        setEditing(null)
     }
 
     const pool = perks.filter((p) => p.id !== NO_EFFECT_ID).length
     const each = pool > 0 ? ((1 - NO_EFFECT_CHANCE) / pool) * 100 : 0
-    const shown = filter === "all" ? perks : perks.filter((p) => p.type === filter)
 
     return (
         <>
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-                <div className="max-w-xl">
-                    <h1 className="font-display text-5xl font-extrabold uppercase sm:text-6xl">Perks</h1>
-                    <p className="mt-2 text-muted-foreground">
-                        {Math.round(NO_EFFECT_CHANCE * 100)}% of spins land on No Effect. The rest pick one of your {pool}{" "}
-                        other perks at random, about {each.toFixed(1)}% each. Changes save automatically on this device.
-                    </p>
-                </div>
-                <ConfirmDialog
-                    trigger={
-                        <Button variant="outline">
-                            <RotateCcw />
-                            Reset to defaults
-                        </Button>
-                    }
-                    title="Reset all perks?"
-                    description="Your edits and any perks you added are removed, and the default perks come back. Point rules aren't affected."
-                    confirmLabel="Reset perks"
-                    onConfirm={() => {
-                        perksStore.reset()
-                        setOpenId(null)
-                    }}
-                />
-            </div>
-
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div role="radiogroup" aria-label="Show" className="flex rounded-md border bg-surface p-0.5">
-                    {(["all", ...TYPES] as Filter[]).map((f) => {
-                        const count = f === "all" ? perks.length : perks.filter((p) => p.type === f).length
-                        return (
-                            <button
-                                key={f}
-                                type="button"
-                                role="radio"
-                                aria-checked={filter === f}
-                                onClick={() => setFilter(f)}
-                                className={cn(
-                                    "rounded px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-                                    filter === f && "bg-surface-raised text-foreground",
-                                )}
-                            >
-                                {FILTER_LABEL[f]}{" "}
-                                <span className="text-muted-foreground tabular-nums">{hydrated ? count : ""}</span>
-                            </button>
-                        )
-                    })}
-                </div>
-                <Button onClick={add} disabled={!hydrated}>
-                    <Plus />
-                    Add perk
-                </Button>
-            </div>
-
-            <ul className={cn("divide-y divide-line/60 border-y border-line/60", !hydrated && "opacity-0")}>
-                {shown.map((perk) => (
-                    <PerkRow
-                        key={perk.id}
-                        perk={perk}
-                        open={openId === perk.id}
-                        onToggle={() => setOpenId(openId === perk.id ? null : perk.id)}
-                        onChange={(patch) => update(perk.id, patch)}
-                        onDelete={() => remove(perk.id)}
+            <div className="mb-10">
+                <h1 className="text-xl text-foreground">Perks</h1>
+                <p className="mt-1 max-w-md text-sm text-muted-foreground">
+                    {Math.round(NO_EFFECT_CHANCE * 100)}% of spins land on No Effect. The rest pick one of your{" "}
+                    {hydrated ? pool : "…"} other perks at random, about {hydrated ? each.toFixed(1) : "…"}% each.
+                </p>
+                <div className="mt-5 flex gap-2">
+                    <Button onClick={() => setEditing({ perk: blankPerk(), isNew: true })} disabled={!hydrated}>
+                        <Plus />
+                        Add perk
+                    </Button>
+                    <ConfirmDialog
+                        trigger={
+                            <Button variant="ghost">
+                                <RotateCcw />
+                                Reset to defaults
+                            </Button>
+                        }
+                        title="Reset all perks?"
+                        description="Your edits and any perks you added are removed, and the default perks come back. Point rules aren't affected."
+                        confirmLabel="Reset perks"
+                        onConfirm={() => perksStore.reset()}
                     />
-                ))}
-                {shown.length === 0 && (
-                    <li className="py-8 text-center text-muted-foreground">No {filter === "all" ? "" : `${filter} `}perks yet. Add one to put it on the wheel.</li>
+                </div>
+            </div>
+
+            <div className={cn("space-y-10", !hydrated && "invisible")}>
+                {TYPES.map((type) => {
+                    const group = perks.filter((p) => p.type === type)
+                    return (
+                        <section key={type} aria-labelledby={`group-${type}`}>
+                            <h2 id={`group-${type}`} className="mb-2 flex items-center gap-2 text-sm text-foreground">
+                                <PerkTypeDot type={type} />
+                                {GROUP_TITLE[type]}
+                                <span className="text-muted-foreground tabular-nums">{group.length}</span>
+                            </h2>
+                            {group.length === 0 ? (
+                                <p className="border-y py-4 text-sm text-muted-foreground">
+                                    No {GROUP_TITLE[type].toLowerCase()} yet.
+                                </p>
+                            ) : (
+                                <ul className="divide-y border-y">
+                                    {group.map((perk) => (
+                                        <li key={perk.id}>
+                                            <button
+                                                type="button"
+                                                onClick={() => setEditing({ perk, isNew: false })}
+                                                className="-mx-3 flex w-[calc(100%+1.5rem)] items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors outline-none hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-primary/50"
+                                            >
+                                                <span className="w-7 shrink-0 text-center text-xl leading-none">{perk.icon || "✨"}</span>
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="block truncate text-sm text-foreground">{perk.name}</span>
+                                                    <span className="block truncate text-xs text-muted-foreground">{perk.effect}</span>
+                                                </span>
+                                                {hasDuration(perk) && (
+                                                    <span className="hidden shrink-0 text-xs text-muted-foreground sm:block">{perk.duration}</span>
+                                                )}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </section>
+                    )
+                })}
+            </div>
+
+            <Dialog open={editing !== null} onClose={() => setEditing(null)} title={editing?.isNew ? "Add perk" : "Edit perk"}>
+                {editing && (
+                    <PerkForm
+                        key={editing.perk.id}
+                        initial={editing.perk}
+                        isNew={editing.isNew}
+                        onSave={save}
+                        onCancel={() => setEditing(null)}
+                        onDelete={() => remove(editing.perk.id)}
+                    />
                 )}
-            </ul>
+            </Dialog>
         </>
     )
 }
 
-interface PerkRowProps {
-    perk: Perk
-    open: boolean
-    onToggle: () => void
-    onChange: (patch: Partial<Perk>) => void
+interface PerkFormProps {
+    initial: Perk
+    isNew: boolean
+    onSave: (perk: Perk) => void
+    onCancel: () => void
     onDelete: () => void
 }
 
-function PerkRow({ perk, open, onToggle, onChange, onDelete }: PerkRowProps) {
-    const id = `perk-${perk.id}`
+function PerkForm({ initial, isNew, onSave, onCancel, onDelete }: PerkFormProps) {
+    const [perk, setPerk] = React.useState(initial)
+    const set = (patch: Partial<Perk>) => setPerk((p) => ({ ...p, ...patch }))
     const isNoEffect = perk.id === NO_EFFECT_ID
+    const canSave = perk.name.trim() !== ""
 
     return (
-        <li className={cn(open && "bg-surface")}>
-            <button
-                type="button"
-                onClick={onToggle}
-                aria-expanded={open}
-                aria-controls={id}
-                className="relative flex w-full items-center gap-4 py-3 pr-2 pl-4 text-left hover:bg-surface"
-            >
-                <span className={cn("absolute top-3 bottom-3 left-0 w-1 rounded-r", PERK_TYPE_BG[perk.type])} aria-hidden />
-                <span className="w-8 shrink-0 text-center text-2xl leading-none">{perk.icon || "✨"}</span>
-                <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">{perk.name || "Untitled perk"}</span>
-                    <span className="block truncate text-sm text-muted-foreground">{perk.effect || "No effect written yet"}</span>
-                </span>
-                <span className="hidden shrink-0 text-sm text-muted-foreground sm:block">{hasDuration(perk) ? perk.duration : ""}</span>
-                <span className={cn("w-16 shrink-0 text-right text-xs font-semibold", PERK_TYPE_TEXT[perk.type])}>{PERK_TYPE_LABEL[perk.type]}</span>
-                <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
-            </button>
+        <form
+            className="mt-5 grid gap-4"
+            onSubmit={(e) => {
+                e.preventDefault()
+                if (canSave) onSave({ ...perk, name: perk.name.trim() })
+            }}
+        >
+            <div className="grid grid-cols-[4rem_1fr] gap-3">
+                <Field label="Icon" htmlFor="perk-icon">
+                    <Input id="perk-icon" value={perk.icon} onChange={(e) => set({ icon: e.target.value })} className="text-center text-lg" />
+                </Field>
+                <Field label="Name" htmlFor="perk-name">
+                    <Input id="perk-name" value={perk.name} onChange={(e) => set({ name: e.target.value })} placeholder="Mamba Mentality" data-autofocus />
+                </Field>
+            </div>
+            <Field label="Effect" htmlFor="perk-effect">
+                <Input id="perk-effect" value={perk.effect} onChange={(e) => set({ effect: e.target.value })} placeholder="+5 Mid-Range Shot" />
+            </Field>
+            <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="Duration" htmlFor="perk-duration">
+                    <Input id="perk-duration" value={perk.duration} onChange={(e) => set({ duration: e.target.value })} placeholder="10 games" />
+                </Field>
+                <Field label="Note (optional)" htmlFor="perk-desc">
+                    <Input id="perk-desc" value={perk.desc} onChange={(e) => set({ desc: e.target.value })} placeholder="Players 21 or younger" />
+                </Field>
+            </div>
 
-            {open && (
-                <div id={id} className="grid gap-4 px-4 pt-1 pb-5 sm:grid-cols-[4.5rem_1fr_1fr]">
-                    <Field label="Icon" htmlFor={`${id}-icon`}>
-                        <Input id={`${id}-icon`} value={perk.icon} onChange={(e) => onChange({ icon: e.target.value })} className="text-center text-xl" />
-                    </Field>
-                    <Field label="Name" htmlFor={`${id}-name`}>
-                        <Input
-                            id={`${id}-name`}
-                            value={perk.name}
-                            onChange={(e) => onChange({ name: e.target.value })}
-                            placeholder="Mamba Mentality"
-                            autoFocus={!perk.name}
-                        />
-                    </Field>
-                    <Field label="Effect" htmlFor={`${id}-effect`}>
-                        <Input id={`${id}-effect`} value={perk.effect} onChange={(e) => onChange({ effect: e.target.value })} placeholder="+5 Mid-Range Shot" />
-                    </Field>
-                    <Field label="Duration" htmlFor={`${id}-duration`} className="sm:col-start-2">
-                        <Input id={`${id}-duration`} value={perk.duration} onChange={(e) => onChange({ duration: e.target.value })} placeholder="10 games" />
-                    </Field>
-                    <Field label="Note" htmlFor={`${id}-desc`}>
-                        <Input id={`${id}-desc`} value={perk.desc} onChange={(e) => onChange({ desc: e.target.value })} placeholder="Only for players 21 or younger" />
-                    </Field>
-
-                    <div className="flex flex-wrap items-end justify-between gap-3 sm:col-span-2 sm:col-start-2">
-                        {isNoEffect ? (
-                            <p className="text-sm text-muted-foreground">No Effect is what a spin lands on when nothing happens, so it can&apos;t be deleted.</p>
-                        ) : (
-                            <>
-                                <div role="radiogroup" aria-label="Type" className="flex gap-1.5">
-                                    {TYPES.map((t) => (
-                                        <button
-                                            key={t}
-                                            type="button"
-                                            role="radio"
-                                            aria-checked={perk.type === t}
-                                            onClick={() => onChange({ type: t })}
-                                            className={cn(
-                                                "rounded-md border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-                                                perk.type === t && cn("border-current bg-current/10", PERK_TYPE_TEXT[t]),
-                                            )}
-                                        >
-                                            {PERK_TYPE_LABEL[t]}
-                                        </button>
-                                    ))}
-                                </div>
-                                <ConfirmDialog
-                                    trigger={
-                                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                                            <Trash2 />
-                                            Delete
-                                        </Button>
-                                    }
-                                    title={`Delete ${perk.name || "this perk"}?`}
-                                    description="It comes off the wheel. Resetting perks to defaults brings back any default perk you delete."
-                                    confirmLabel="Delete perk"
-                                    onConfirm={onDelete}
-                                />
-                            </>
-                        )}
+            {isNoEffect ? (
+                <p className="text-xs text-muted-foreground">
+                    No Effect is where a spin lands when nothing happens, so its type is fixed and it can&apos;t be deleted.
+                </p>
+            ) : (
+                <fieldset>
+                    <legend className="mb-1.5 text-xs text-muted-foreground">Type</legend>
+                    <div role="radiogroup" className="flex gap-2">
+                        {TYPES.map((t) => (
+                            <button
+                                key={t}
+                                type="button"
+                                role="radio"
+                                aria-checked={perk.type === t}
+                                onClick={() => set({ type: t })}
+                                className={cn(
+                                    "inline-flex h-8 items-center gap-2 rounded-lg px-3 text-sm ring-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+                                    perk.type === t
+                                        ? "bg-white/[0.08] text-foreground ring-white/20"
+                                        : "text-muted-foreground ring-white/[0.08] hover:text-foreground",
+                                )}
+                            >
+                                <PerkTypeDot type={t} />
+                                {PERK_TYPE_LABEL[t]}
+                            </button>
+                        ))}
                     </div>
-                </div>
+                </fieldset>
             )}
-        </li>
+
+            <div className="mt-3 flex items-center gap-2">
+                {!isNew && !isNoEffect && <DeleteButton onDelete={onDelete} />}
+                <div className="ml-auto flex gap-2">
+                    <Button type="button" variant="ghost" onClick={onCancel}>
+                        Cancel
+                    </Button>
+                    <Button type="submit" disabled={!canSave}>
+                        {isNew ? "Add perk" : "Save"}
+                    </Button>
+                </div>
+            </div>
+        </form>
     )
 }
 
-function Field({ label, htmlFor, className, children }: { label: string; htmlFor: string; className?: string; children: React.ReactNode }) {
+// Deletes on the second click, so a stray click can't remove a perk.
+function DeleteButton({ onDelete }: { onDelete: () => void }) {
+    const [armed, setArmed] = React.useState(false)
+
+    React.useEffect(() => {
+        if (!armed) return
+        const timer = setTimeout(() => setArmed(false), 3000)
+        return () => clearTimeout(timer)
+    }, [armed])
+
     return (
-        <div className={cn("grid gap-1.5", className)}>
-            <label htmlFor={htmlFor} className="text-xs font-medium text-muted-foreground">
+        <Button
+            type="button"
+            variant={armed ? "destructive" : "ghost"}
+            className={cn("-ml-2", !armed && "text-muted-foreground hover:text-destructive")}
+            onClick={() => (armed ? onDelete() : setArmed(true))}
+        >
+            {armed ? "Click again to delete" : "Delete"}
+        </Button>
+    )
+}
+
+function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: React.ReactNode }) {
+    return (
+        <div className="grid gap-1.5">
+            <label htmlFor={htmlFor} className="text-xs text-muted-foreground">
                 {label}
             </label>
             {children}

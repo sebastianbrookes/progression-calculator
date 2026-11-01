@@ -2,26 +2,24 @@
 @import "tw-animate-css";
 
 /*
- * Arena at night: a navy floor, an LED-amber scoreboard for attribute points,
- * Hall of Fame purple for badge points, and green/red kept for buffs/nerfs.
+ * Quiet dark theme, matching sebastianbrookes.com: neutral-900 background,
+ * slate text, and one muted basketball orange used sparingly.
  */
 :root {
-  --background: #0c1428;
-  --foreground: #eef1f8;
-  --surface: #131d36;
-  --surface-raised: #1a2644;
-  --line: #26345a;
-  --muted-foreground: #8e9abb;
+  --background: #171717;
+  --foreground: #f1f5f9;
+  --secondary-foreground: #cbd5e1;
+  --muted-foreground: #94a3b8;
+  --surface: rgb(255 255 255 / 0.04);
+  --line: rgb(255 255 255 / 0.08);
 
-  --primary: #ffb627;
-  --primary-foreground: #1b1300;
-  --badge: #b896ff;
-  --buff: #3ddc97;
-  --nerf: #ff6b6b;
-  --neutral: #9aa6c4;
+  --primary: #f4a261;
+  --primary-foreground: #1c1208;
 
-  --ring: #ffb627;
-  --destructive: #ff6b6b;
+  --buff: #34d399;
+  --nerf: #fb7185;
+  --neutral: #94a3b8;
+  --destructive: #fb7185;
 
   /* The perk reel: fast start, long suspenseful slowdown. */
   --ease-reel: cubic-bezier(0.15, 0.6, 0.2, 1);
@@ -32,47 +30,39 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-line: var(--line);
-  --color-border: var(--line);
-  --color-input: var(--line);
-  --color-muted: var(--surface-raised);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted-foreground: var(--muted-foreground);
-  --color-popover: var(--surface);
-  --color-popover-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-badge: var(--badge);
   --color-buff: var(--buff);
   --color-nerf: var(--nerf);
   --color-neutral: var(--neutral);
-  --color-ring: var(--ring);
   --color-destructive: var(--destructive);
+  --color-ring: var(--primary);
 
-  --font-sans: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-big-shoulders), var(--font-saira), sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
 
+/* The raised card from the portfolio's home page. */
+@utility panel {
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgb(255 255 255 / 0.06);
+  background-image: linear-gradient(to bottom, rgb(38 38 38 / 0.8), rgb(23 23 23 / 0.9));
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.04) inset,
+    0 20px 40px -24px rgb(0 0 0 / 0.6);
 }
 
 @layer base {
   * {
-    @apply border-line outline-ring/60;
+    @apply border-line outline-primary/60;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "tnum";
+    @apply bg-background font-sans font-light text-foreground antialiased;
   }
   ::selection {
-    @apply bg-primary text-primary-foreground;
-  }
-  /* Number inputs are typed into, never stepped. */
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    @apply bg-primary/30;
   }
 }

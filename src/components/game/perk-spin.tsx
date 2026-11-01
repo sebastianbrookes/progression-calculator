@@ -9,7 +9,7 @@ import { gameFromParams, gameToParams, scoreGame } from "@/lib/scoring"
 import { perksStore, settingsStore } from "@/lib/stores"
 import { useStore } from "@/lib/storage"
 import { cn } from "@/lib/utils"
-import { PERK_TYPE_LABEL, PERK_TYPE_TEXT } from "@/components/perk-style"
+import { PerkTypeLabel } from "@/components/perk-style"
 import { StatSummary } from "./stat-summary"
 import { PerkReel, buildStrip, type ReelSlot } from "./perk-reel"
 
@@ -42,17 +42,15 @@ export function PerkSpin() {
     const resultsHref = `/results?${gameToParams(game, phase === "landed" ? perk?.id : undefined)}`
 
     return (
-        <div className="mx-auto max-w-2xl">
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <>
+            <div className="mb-8 flex items-end justify-between gap-4">
                 <div>
-                    <h1 className="font-display text-5xl font-extrabold uppercase sm:text-6xl">
-                        {phase === "landed" ? "You got" : "Spin for a perk"}
-                    </h1>
-                    <StatSummary stats={game.stats} className="mt-3" />
+                    <h1 className="text-xl text-foreground">{phase === "landed" ? "You got" : "Spin for a perk"}</h1>
+                    <StatSummary stats={game.stats} className="mt-2" />
                 </div>
-                <p className="flex items-baseline gap-2 sm:flex-col sm:items-end sm:gap-0">
-                    <span className="font-display text-4xl font-bold text-primary tabular-nums">+{result.attr}</span>
-                    <span className="text-sm text-muted-foreground">attribute points</span>
+                <p className="text-right">
+                    <span className="block text-3xl font-extralight text-primary tabular-nums">+{result.attr}</span>
+                    <span className="block text-xs text-muted-foreground">Attribute points</span>
                 </p>
             </div>
 
@@ -63,14 +61,14 @@ export function PerkSpin() {
                 onLand={() => setPhase("landed")}
             />
 
-            <div className="min-h-24 pt-5" aria-live="polite">
+            <div className="min-h-20 pt-5 text-sm" aria-live="polite">
                 {phase === "landed" && perk ? (
-                    <div className="animate-in fade-in slide-in-from-top-1 duration-300">
+                    <div className="animate-in fade-in duration-300">
                         <p className="sr-only">
                             {perk.name}: {perk.effect}
                         </p>
-                        <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-                            <span className={cn("font-semibold", PERK_TYPE_TEXT[perk.type])}>{PERK_TYPE_LABEL[perk.type]}</span>
+                        <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                            <PerkTypeLabel type={perk.type} />
                             {hasDuration(perk) && (
                                 <span className="flex items-center gap-1.5 text-muted-foreground">
                                     <Clock className="size-3.5" />
@@ -78,7 +76,7 @@ export function PerkSpin() {
                                 </span>
                             )}
                         </p>
-                        {perk.desc && <p className="mt-1.5 text-muted-foreground">{perk.desc}</p>}
+                        {perk.desc && <p className="mt-1.5 text-secondary-foreground">{perk.desc}</p>}
                     </div>
                 ) : (
                     <p className="text-muted-foreground">
@@ -87,12 +85,12 @@ export function PerkSpin() {
                 )}
             </div>
 
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <div className="flex flex-col gap-2 sm:flex-row">
                 {phase === "landed" ? (
                     <>
                         <Button size="lg" className="sm:flex-1" onClick={() => router.push(resultsHref)}>
                             See results
-                            <ArrowRight className="size-5" />
+                            <ArrowRight />
                         </Button>
                         <Button size="lg" variant="outline" onClick={spin}>
                             <RotateCcw />
@@ -102,7 +100,7 @@ export function PerkSpin() {
                 ) : (
                     <>
                         <Button size="lg" className="sm:flex-1" onClick={spin} disabled={phase === "spinning"} autoFocus>
-                            <Dices className={cn("size-5", phase === "spinning" && "animate-spin")} />
+                            <Dices className={cn(phase === "spinning" && "animate-spin")} />
                             {phase === "spinning" ? "Spinning…" : "Spin"}
                         </Button>
                         {phase === "ready" && (
@@ -114,10 +112,10 @@ export function PerkSpin() {
                 )}
             </div>
 
-            <ButtonLink href={editHref} variant="ghost" size="sm" className="mt-6 -ml-3">
+            <ButtonLink href={editHref} variant="ghost" size="sm" className="mt-8 -ml-2.5">
                 <Pencil />
                 Edit stats
             </ButtonLink>
-        </div>
+        </>
     )
 }

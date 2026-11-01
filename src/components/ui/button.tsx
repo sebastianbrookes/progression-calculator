@@ -5,20 +5,19 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-semibold whitespace-nowrap transition-[color,background-color,border-color,transform] outline-none select-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg text-sm font-normal whitespace-nowrap transition-[color,background-color,box-shadow,scale] duration-150 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-primary/40 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        outline: "border bg-surface hover:border-muted-foreground/50 hover:bg-surface-raised",
-        ghost: "text-muted-foreground hover:bg-surface-raised hover:text-foreground",
-        destructive: "bg-destructive/15 text-destructive hover:bg-destructive/25",
+        default: "bg-primary font-medium text-primary-foreground hover:bg-primary/90",
+        outline: "bg-surface text-foreground ring-1 ring-white/10 hover:bg-white/[0.07]",
+        ghost: "text-secondary-foreground hover:bg-white/5 hover:text-foreground",
+        destructive: "bg-destructive/10 text-destructive hover:bg-destructive/15",
       },
       size: {
-        default: "h-10 px-4",
-        sm: "h-8 px-3 text-xs",
-        lg: "h-12 px-6 text-base",
-        icon: "size-9",
+        default: "h-9 px-3.5",
+        sm: "h-8 px-2.5",
+        lg: "h-11 px-5",
       },
     },
     defaultVariants: {

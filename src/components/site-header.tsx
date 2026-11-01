@@ -14,30 +14,28 @@ export function SiteHeader() {
     const pathname = usePathname()
 
     return (
-        <header className="border-b bg-background/85 backdrop-blur supports-backdrop-filter:bg-background/70 sticky top-0 z-40">
-            <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
-                <Link href="/" className="font-display text-xl font-extrabold tracking-wide uppercase">
-                    Progression
-                </Link>
-                <nav className="-mr-2 flex items-center">
-                    {NAV.map(({ href, label, match }) => {
-                        const active = match.includes(pathname)
-                        return (
-                            <Link
-                                key={href}
-                                href={href}
-                                aria-current={active ? "page" : undefined}
-                                className={cn(
-                                    "relative px-2.5 py-4 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:px-3",
-                                    active && "text-foreground after:absolute after:inset-x-2.5 after:-bottom-px after:h-0.5 after:bg-primary sm:after:inset-x-3",
-                                )}
-                            >
-                                {label}
-                            </Link>
-                        )
-                    })}
-                </nav>
-            </div>
+        <header className="mx-auto flex w-full max-w-2xl items-center justify-between gap-4 px-5 pt-6 sm:px-6 sm:pt-10">
+            <Link href="/" className="text-sm whitespace-nowrap text-foreground">
+                Progression<span className="hidden sm:inline"> Calculator</span>
+            </Link>
+            <nav className="-mr-2.5 flex items-center text-sm">
+                {NAV.map(({ href, label, match }) => {
+                    const active = match.includes(pathname)
+                    return (
+                        <Link
+                            key={href}
+                            href={href}
+                            aria-current={active ? "page" : undefined}
+                            className={cn(
+                                "rounded-lg px-2.5 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground",
+                                active && "text-foreground",
+                            )}
+                        >
+                            {label}
+                        </Link>
+                    )
+                })}
+            </nav>
         </header>
     )
 }

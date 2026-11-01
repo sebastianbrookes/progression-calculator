@@ -31,7 +31,7 @@ export function NumberField({ value, onValueChange, className, ...props }: Numbe
             }}
             onBlur={() => setDraft(null)}
             className={cn(
-                "h-9 w-16 rounded-md border bg-surface-raised px-2 text-right font-semibold tabular-nums outline-none hover:border-muted-foreground/40 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25",
+                "h-8 w-14 rounded-lg bg-surface px-2 text-right text-foreground tabular-nums ring-1 ring-white/10 outline-none hover:ring-white/15 focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50",
                 className,
             )}
         />

@@ -4,19 +4,19 @@ import * as React from "react"
 import { useSearchParams } from "next/navigation"
 import { Check, Clock, Copy, Dices, Pencil, Plus } from "lucide-react"
 import { Button, ButtonLink } from "@/components/ui/button"
+import { PerkTypeLabel } from "@/components/perk-style"
 import { DEFAULT_PERKS, hasDuration, type Perk } from "@/lib/perks"
 import { STATS, UPGRADE_COSTS } from "@/lib/rules"
 import { gameFromParams, gameToParams, scoreGame, type Game, type GameResult } from "@/lib/scoring"
 import { perksStore, settingsStore } from "@/lib/stores"
 import { useStore } from "@/lib/storage"
 import { cn } from "@/lib/utils"
-import { PERK_TYPE_GLOW, PERK_TYPE_LABEL, PERK_TYPE_TEXT } from "@/components/perk-style"
 import { StatSummary } from "./stat-summary"
 
 const COST_COLOUR: Record<(typeof UPGRADE_COSTS)[number]["colour"], string> = {
-    white: "bg-foreground",
+    white: "bg-slate-100",
     yellow: "bg-yellow-400",
-    gray: "bg-slate-400",
+    gray: "bg-slate-500",
     purple: "bg-purple-400",
     orange: "bg-orange-500",
 }
@@ -34,10 +34,10 @@ export function GameResults() {
 
     return (
         <>
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <h1 className="font-display text-5xl font-extrabold uppercase sm:text-6xl">Game result</h1>
-                    <StatSummary stats={game.stats} className="mt-3" />
+                    <h1 className="text-xl text-foreground">Game result</h1>
+                    <StatSummary stats={game.stats} className="mt-2" />
                 </div>
                 <div className="flex gap-2">
                     <CopySummaryButton game={game} result={result} perk={perk} />
@@ -48,69 +48,63 @@ export function GameResults() {
                 </div>
             </div>
 
-            <div className="grid gap-10 lg:grid-cols-[1fr_20rem]">
-                <section aria-label="Points earned">
-                    <div className="flex flex-wrap gap-x-12 gap-y-4 border-b pb-6">
-                        <Total value={result.attr} label="attribute points" className="text-primary" />
-                        <Total value={result.badge} label="badge points" className="text-badge" />
-                    </div>
+            <section aria-label="Points earned">
+                <div className="flex gap-12">
+                    <Total value={result.attr} label="Attribute points" accent />
+                    <Total value={result.badge} label="Badge points" />
+                </div>
 
-                    {result.items.length === 0 ? (
-                        <p className="py-6 text-muted-foreground">
-                            This game didn&apos;t reach any point thresholds. The lowest ones are 10 points, 10 rebounds or
-                            assists, and 3 steals or blocks.
-                        </p>
-                    ) : (
-                        <table className="w-full text-left">
-                            <thead className={showBadges ? undefined : "sr-only"}>
-                                <tr className="text-right text-xs font-medium text-muted-foreground">
-                                    <th className="pt-3 text-left font-medium">
-                                        <span className="sr-only">Reason</span>
-                                    </th>
-                                    <th className="pt-3 font-medium">Attribute</th>
-                                    {showBadges && <th className="pt-3 font-medium">Badge</th>}
+                {result.items.length === 0 ? (
+                    <p className="mt-8 border-t pt-6 text-sm text-muted-foreground">
+                        This game didn&apos;t reach any point thresholds. The lowest ones are 10 points, 10 rebounds or
+                        assists, and 3 steals or blocks.
+                    </p>
+                ) : (
+                    <table className="mt-8 w-full text-left text-sm">
+                        <thead className={showBadges ? undefined : "sr-only"}>
+                            <tr className="text-right text-xs text-muted-foreground">
+                                <th className="pb-2 text-left font-normal">
+                                    <span className="sr-only">Reason</span>
+                                </th>
+                                <th className="pb-2 font-normal">Attribute</th>
+                                {showBadges && <th className="pb-2 font-normal">Badge</th>}
+                            </tr>
+                        </thead>
+                        <tbody className="border-t">
+                            {result.items.map((item) => (
+                                <tr key={item.label} className="border-b">
+                                    <td className="py-3 text-secondary-foreground">{item.label}</td>
+                                    <td className="w-20 py-3 text-right text-primary tabular-nums">{item.attr > 0 && `+${item.attr}`}</td>
+                                    {showBadges && (
+                                        <td className="w-20 py-3 text-right text-foreground tabular-nums">{item.badge > 0 && `+${item.badge}`}</td>
+                                    )}
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {result.items.map((item) => (
-                                    <tr key={item.label} className="border-b border-line/60">
-                                        <td className="py-3 text-base sm:text-lg">{item.label}</td>
-                                        <td className="w-16 py-3 text-right font-display text-2xl font-bold text-primary tabular-nums">
-                                            {item.attr > 0 && `+${item.attr}`}
-                                        </td>
-                                        {showBadges && (
-                                            <td className="w-20 py-3 text-right font-display text-2xl font-bold text-badge tabular-nums">
-                                                {item.badge > 0 && `+${item.badge}`}
-                                            </td>
-                                        )}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </section>
-
-                <aside className="space-y-8">
-                    <PerkPanel perk={perk} spinHref={`/spin?${gameToParams(game)}`} />
-
-                    <section>
-                        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Cost of a +1 upgrade</h2>
-                        <ul className="space-y-px overflow-hidden rounded-lg border">
-                            {UPGRADE_COSTS.map(({ range, cost, colour }) => (
-                                <li key={range} className="flex items-center gap-3 bg-surface px-3 py-2 text-sm">
-                                    <span className={cn("size-2.5 rounded-full", COST_COLOUR[colour])} aria-hidden />
-                                    <span className="flex-1">Rated {range.toLowerCase()}</span>
-                                    <span className="font-semibold tabular-nums">
-                                        {cost} {cost === 1 ? "point" : "points"}
-                                    </span>
-                                </li>
                             ))}
-                        </ul>
-                    </section>
-                </aside>
+                        </tbody>
+                    </table>
+                )}
+            </section>
+
+            <div className="mt-12 grid gap-8 sm:grid-cols-2">
+                <PerkPanel perk={perk} spinHref={`/spin?${gameToParams(game)}`} />
+
+                <section>
+                    <h2 className="mb-3 text-sm text-muted-foreground">Cost of a +1 upgrade</h2>
+                    <ul className="text-sm">
+                        {UPGRADE_COSTS.map(({ range, cost, colour }) => (
+                            <li key={range} className="flex items-center gap-3 border-b py-2 first:border-t">
+                                <span className={cn("size-2 rounded-full", COST_COLOUR[colour])} aria-hidden />
+                                <span className="flex-1 text-secondary-foreground">Rated {range.toLowerCase()}</span>
+                                <span className="text-foreground tabular-nums">
+                                    {cost} {cost === 1 ? "point" : "points"}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
             </div>
 
-            <ButtonLink href={`/?${gameToParams(game)}`} variant="ghost" size="sm" className="mt-10 -ml-3">
+            <ButtonLink href={`/?${gameToParams(game)}`} variant="ghost" size="sm" className="mt-10 -ml-2.5">
                 <Pencil />
                 Edit stats
             </ButtonLink>
@@ -118,13 +112,13 @@ export function GameResults() {
     )
 }
 
-function Total({ value, label, className }: { value: number; label: string; className: string }) {
+function Total({ value, label, accent = false }: { value: number; label: string; accent?: boolean }) {
     return (
         <p>
-            <span className={cn("block font-display text-8xl leading-none font-extrabold tabular-nums", value === 0 ? "text-muted-foreground/40" : className)}>
+            <span className={cn("block text-5xl font-extralight tabular-nums", value === 0 ? "text-muted-foreground/50" : accent && "text-primary")}>
                 +{value}
             </span>
-            <span className="mt-1 block text-muted-foreground">{label}</span>
+            <span className="mt-1.5 block text-xs text-muted-foreground">{label}</span>
         </p>
     )
 }
@@ -132,8 +126,8 @@ function Total({ value, label, className }: { value: number; label: string; clas
 function PerkPanel({ perk, spinHref }: { perk: Perk | null; spinHref: string }) {
     if (!perk) {
         return (
-            <section className="rounded-lg border border-dashed p-5">
-                <h2 className="font-semibold">No perk this game</h2>
+            <section className="self-start rounded-2xl p-5 ring-1 ring-white/10 ring-inset">
+                <h2 className="text-sm text-foreground">No perk this game</h2>
                 <p className="mt-1 text-sm text-muted-foreground">The spin was skipped.</p>
                 <ButtonLink href={spinHref} variant="outline" size="sm" className="mt-4">
                     <Dices />
@@ -143,19 +137,19 @@ function PerkPanel({ perk, spinHref }: { perk: Perk | null; spinHref: string }) 
         )
     }
     return (
-        <section className={cn("rounded-lg border-2 bg-linear-to-t to-transparent p-5", PERK_TYPE_GLOW[perk.type])}>
+        <section className="panel self-start p-5">
             <h2 className="sr-only">Perk</h2>
-            <div className="flex items-center gap-4">
-                <span className="text-5xl leading-none">{perk.icon || "✨"}</span>
+            <div className="flex items-center gap-3">
+                <span className="text-4xl leading-none">{perk.icon || "✨"}</span>
                 <div className="min-w-0">
-                    <p className={cn("text-xs font-semibold", PERK_TYPE_TEXT[perk.type])}>{PERK_TYPE_LABEL[perk.type]}</p>
-                    <p className="font-display text-3xl leading-tight font-bold uppercase">{perk.name}</p>
+                    <p className="text-base text-foreground">{perk.name}</p>
+                    <PerkTypeLabel type={perk.type} className="text-xs" />
                 </div>
             </div>
-            <p className="mt-4 text-lg">{perk.effect}</p>
+            <p className="mt-4 text-sm text-secondary-foreground">{perk.effect}</p>
             {perk.desc && <p className="mt-1 text-sm text-muted-foreground">{perk.desc}</p>}
             {hasDuration(perk) && (
-                <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+                <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Clock className="size-3.5" />
                     {perk.duration}
                 </p>

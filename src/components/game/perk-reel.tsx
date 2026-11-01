@@ -3,7 +3,7 @@
 import * as React from "react"
 import type { Perk } from "@/lib/perks"
 import { cn } from "@/lib/utils"
-import { PERK_TYPE_BG, PERK_TYPE_GLOW, PERK_TYPE_TEXT } from "@/components/perk-style"
+import { PerkTypeDot } from "@/components/perk-style"
 
 const SPIN_MS = 4200
 const FILLER_COUNT = 32
@@ -48,11 +48,8 @@ export function PerkReel({ strip, spinId, landed, onLand }: PerkReelProps) {
     }, [spinId, strip.length])
 
     return (
-        <div className="relative">
-            <div
-                className="h-84 overflow-hidden mask-[linear-gradient(transparent,black_28%,black_72%,transparent)]"
-                aria-hidden
-            >
+        <div className="panel relative overflow-hidden px-2">
+            <div className="h-72 overflow-hidden mask-[linear-gradient(transparent,black_30%,black_70%,transparent)]" aria-hidden>
                 <div
                     ref={stripRef}
                     className="will-change-transform"
@@ -65,13 +62,11 @@ export function PerkReel({ strip, spinId, landed, onLand }: PerkReelProps) {
                     ))}
                 </div>
             </div>
-            {/* Payline */}
+            {/* The middle row is where the reel stops. */}
             <div
                 className={cn(
-                    "pointer-events-none absolute inset-x-0 top-28 h-28 rounded-lg border-2 transition-[border-color,background-color] duration-300",
-                    landed
-                        ? cn("bg-linear-to-t to-transparent", PERK_TYPE_GLOW[landed.type])
-                        : "border-primary/70",
+                    "pointer-events-none absolute inset-x-2 top-24 h-24 rounded-xl ring-1 transition-[box-shadow,background-color] duration-300",
+                    landed ? "bg-white/[0.03] ring-white/25" : "ring-white/10",
                 )}
             />
         </div>
@@ -81,23 +76,21 @@ export function PerkReel({ strip, spinId, landed, onLand }: PerkReelProps) {
 function ReelRow({ slot }: { slot: ReelSlot }) {
     if (!slot) {
         return (
-            <div className="flex h-28 items-center gap-5 px-5">
-                <span className="grid size-14 shrink-0 place-items-center rounded-md border-2 border-dashed border-primary/60 font-display text-4xl font-bold text-primary">
-                    ?
-                </span>
-                <span className="font-display text-3xl font-bold uppercase sm:text-4xl">Perk waiting</span>
+            <div className="flex h-24 items-center gap-4 px-4">
+                <span className="grid size-11 shrink-0 place-items-center rounded-full text-lg text-muted-foreground ring-1 ring-white/15 ring-inset">?</span>
+                <span className="text-lg text-muted-foreground">Perk waiting</span>
             </div>
         )
     }
     return (
-        <div className="relative flex h-28 items-center gap-5 px-5">
-            <span className={cn("absolute top-5 bottom-5 left-0 w-1 rounded-r", PERK_TYPE_BG[slot.type])} />
-            <span className="grid size-14 shrink-0 place-items-center text-5xl leading-none">{slot.icon || "✨"}</span>
+        <div className="flex h-24 items-center gap-4 px-4">
+            <span className="grid size-11 shrink-0 place-items-center text-4xl leading-none">{slot.icon || "✨"}</span>
             <span className="min-w-0">
-                <span className={cn("block truncate font-display text-3xl leading-tight font-bold uppercase sm:text-4xl", PERK_TYPE_TEXT[slot.type])}>
-                    {slot.name || "Untitled perk"}
+                <span className="flex items-center gap-2">
+                    <PerkTypeDot type={slot.type} />
+                    <span className="truncate text-lg text-foreground">{slot.name || "Untitled perk"}</span>
                 </span>
-                <span className="block truncate text-sm text-muted-foreground sm:text-base">{slot.effect}</span>
+                <span className="block truncate text-sm text-muted-foreground">{slot.effect}</span>
             </span>
         </div>
     )

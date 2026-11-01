@@ -35,7 +35,7 @@ export function PointRulesEditor() {
                 <button
                     type="button"
                     onClick={() => update(setting, DEFAULT_SETTINGS[setting])}
-                    className="text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+                    className="text-xs text-muted-foreground underline-offset-[3px] hover:text-foreground hover:underline"
                     aria-label={`Reset ${label} to the default, ${DEFAULT_SETTINGS[setting]}`}
                 >
                     Default {DEFAULT_SETTINGS[setting]}
@@ -52,11 +52,11 @@ export function PointRulesEditor() {
 
     const group = (title: string, rows: Row[]) => (
         <section key={title}>
-            <h2 className="mb-2 font-display text-2xl font-bold uppercase">{title}</h2>
-            <ul className="divide-y divide-line/60 border-y border-line/60">
+            <h2 className="mb-2 text-sm text-foreground">{title}</h2>
+            <ul className="divide-y border-y text-sm">
                 {rows.map(({ label, setting }) => (
-                    <li key={setting} className="flex items-center justify-between gap-4 py-2">
-                        <span>{label}</span>
+                    <li key={setting} className="flex items-center justify-between gap-4 py-1.5">
+                        <span className="text-secondary-foreground">{label}</span>
                         {field(setting, label)}
                     </li>
                 ))}
@@ -67,16 +67,16 @@ export function PointRulesEditor() {
     return (
         <>
             <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-                <div className="max-w-xl">
-                    <h1 className="font-display text-5xl font-extrabold uppercase sm:text-6xl">Point rules</h1>
-                    <p className="mt-2 text-muted-foreground">
+                <div className="max-w-md">
+                    <h1 className="text-xl text-foreground">Point rules</h1>
+                    <p className="mt-1 text-sm text-muted-foreground">
                         How many attribute points each milestone is worth. Only the highest tier reached in a stat counts.
                         Changes save automatically on this device.
                     </p>
                 </div>
                 <ConfirmDialog
                     trigger={
-                        <Button variant="outline" disabled={changed === 0}>
+                        <Button variant="outline" size="sm" disabled={changed === 0}>
                             <RotateCcw />
                             Reset to defaults
                         </Button>
@@ -88,7 +88,7 @@ export function PointRulesEditor() {
                 />
             </div>
 
-            <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
+            <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
                 {group(STAT_GROUPS[0].title, STAT_GROUPS[0].rows)}
                 <div className="space-y-10">
                     {group(STAT_GROUPS[1].title, STAT_GROUPS[1].rows)}
@@ -99,23 +99,23 @@ export function PointRulesEditor() {
                 {group("Multi-doubles", MULTI_DOUBLE_ROWS)}
                 {group("Game and monthly awards", RECURRING_AWARD_ROWS)}
 
-                <section className="md:col-span-2">
-                    <h2 className="mb-2 font-display text-2xl font-bold uppercase">Season awards</h2>
-                    <p className="mb-3 text-sm text-muted-foreground">Season awards also give badge points.</p>
-                    <table className="w-full max-w-xl">
+                <section className="sm:col-span-2">
+                    <h2 className="text-sm text-foreground">Season awards</h2>
+                    <p className="mb-2 text-xs text-muted-foreground">Season awards also give badge points.</p>
+                    <table className="w-full text-sm">
                         <thead>
-                            <tr className="text-right text-xs font-medium text-muted-foreground">
-                                <th className="pb-2 text-left font-medium">Award</th>
-                                <th className="pb-2 font-medium">Attribute points</th>
-                                <th className="pb-2 pl-6 font-medium">Badge points</th>
+                            <tr className="text-right text-xs text-muted-foreground">
+                                <th className="pb-2 text-left font-normal">Award</th>
+                                <th className="pb-2 font-normal">Attribute</th>
+                                <th className="pb-2 pl-6 font-normal">Badge</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-line/60 border-y border-line/60">
+                        <tbody className="divide-y border-y">
                             {SEASON_AWARDS.map((award) => (
                                 <tr key={award.id}>
-                                    <td className="py-2">{award.label}</td>
-                                    <td className="py-2">{field(award.attr, `${award.label} attribute points`)}</td>
-                                    <td className="py-2 pl-6">{award.badge && field(award.badge, `${award.label} badge points`)}</td>
+                                    <td className="py-1.5 text-secondary-foreground">{award.label}</td>
+                                    <td className="py-1.5">{field(award.attr, `${award.label} attribute points`)}</td>
+                                    <td className="py-1.5 pl-6">{award.badge && field(award.badge, `${award.label} badge points`)}</td>
                                 </tr>
                             ))}
                         </tbody>

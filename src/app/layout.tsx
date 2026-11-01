@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next"
 import { Analytics } from "@vercel/analytics/next"
-import { Big_Shoulders, Saira } from "next/font/google"
+import { Inter } from "next/font/google"
 import { SiteHeader } from "@/components/site-header"
 import "./globals.css"
 
-const saira = Saira({ subsets: ["latin"], variable: "--font-saira", display: "swap" })
-const bigShoulders = Big_Shoulders({ subsets: ["latin"], variable: "--font-big-shoulders", display: "swap" })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
 
 export const metadata: Metadata = {
     title: {
@@ -17,15 +16,15 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-    themeColor: "#0c1428",
+    themeColor: "#171717",
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`${saira.variable} ${bigShoulders.variable}`}>
-            <body className="flex min-h-dvh flex-col">
+        <html lang="en" className={inter.variable}>
+            <body className="min-h-dvh">
                 <SiteHeader />
-                <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-16 sm:px-6 sm:pt-10">{children}</main>
+                <main className="mx-auto w-full max-w-2xl px-5 pt-12 pb-20 sm:px-6 sm:pt-16">{children}</main>
                 <Analytics />
             </body>
         </html>

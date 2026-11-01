@@ -12,8 +12,8 @@ A modern web app companion for NBA 2K26 MyNBA team rebuild series. Enter your pl
 - **🎰 Perk reel** — A slot-style spin for a random buff, nerf, or no effect
 - **📈 Points breakdown** — Attribute and badge points, line by line, plus a one-click text summary to copy
 - **⚙️ Point rules** — Change what every milestone and award is worth
-- **✨ Perk editor** — Edit, add, or remove perks, with the real odds shown
-- **💾 Saved on your device** — Rules and perks autosave to localStorage
+- **✨ Perk editor** — Edit, add, or remove perks, grouped by type, with the real odds shown
+- **💾 Saved on your device** — Point rules autosave; perks save when you press Save. Both live in localStorage
 - **📱 Mobile friendly** — Works on a phone next to the TV
 
 ## Tech Stack
