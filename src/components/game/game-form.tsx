@@ -73,7 +73,6 @@ export function GameForm({ initial = EMPTY_GAME }: { initial?: Game }) {
                                 name={key}
                                 inputMode="numeric"
                                 autoComplete="off"
-                                autoFocus={i === 0}
                                 value={draft[key]}
                                 onChange={(e) => {
                                     const value = e.target.value.replace(/\D/g, "").slice(0, 3)
